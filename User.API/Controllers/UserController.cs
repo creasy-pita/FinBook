@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace User.API.Controllers
 {
     [Route("api/[controller]")]
+
     public class UserController : Controller
     {
-        // GET api/values/5
+        // GET api/user/CheckOrCreate
         [Route("CheckOrCreate")]
-        [HttpGet("{phone}")]
         public string CheckOrCreate(string phone)
         {
             if (phone == "2")
@@ -26,18 +26,18 @@ namespace User.API.Controllers
 
 
         // GET api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        //[HttpGet]
+        //public IEnumerable<string> Get()
+        //{
+        //    return new string[] { "value1", "value2" };
+        //}
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        //// GET api/values/5
+        //[HttpGet("{id}")]
+        //public string Get(int id)
+        //{
+        //    return "value";
+        //}
 
         // POST api/values
         [HttpPost]
