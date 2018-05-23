@@ -11,20 +11,33 @@ namespace User.API.Controllers
     public class UserController : Controller
     {
         // GET api/user/CheckOrCreate
-        [Route("CheckOrCreate")]
-        public string CheckOrCreate(string phone)
+        //[Route("CheckOrCreate")]
+        //public string CheckOrCreate(string phone)
+        //{
+        //    if (phone == "2")
+        //    {
+        //        return "is exists";
+        //    }
+        //    else
+        //    {
+        //        return "i create";
+        //    }
+        //}
+
+        // GET api/user/CheckOrCreate
+        [Route("check-or-create")]
+        [HttpPost]
+        public int CheckOrCreate(string phone)
         {
             if (phone == "2")
             {
-                return "is exists";
+                return 1;
             }
             else
             {
-                return "i create";
+                return 0;
             }
         }
-
-
         // GET api/values
         //[HttpGet]
         //public IEnumerable<string> Get()

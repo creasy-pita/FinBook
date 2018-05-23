@@ -8,10 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Ocelot.DependencyInjection;
-using Ocelot.Middleware;
 
-namespace Gateway.API
+namespace User.IdentityServer
 {
     public class Startup
     {
@@ -25,19 +23,12 @@ namespace Gateway.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var authenticationProviderKey = "TestKey";
-
-            services.AddAuthentication()
-                .AddJwtBearer(authenticationProviderKey, x =>
-                {
-                    x.Authority = "test";
-                    x.Audience = "test";
-                    x.RequireHttpsMetadata = false;
-                });
-
-
-            services.AddOcelot();
-            //services.AddMvc();
+            services.AddIdentityServer()
+                    .AddDeveloperSigningCredential()
+                    .AddInMemoryApiResources(Config.GetResource())
+                    .AddInMemoryClients(Config.GetClient())
+                    .AddTestUsers(Config.GetTestUser());
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,8 +38,8 @@ namespace Gateway.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseOcelot().Wait();
-            //app.UseMvc();
+            app.UseIdentityServer();
+            app.UseMvc();
         }
     }
 }

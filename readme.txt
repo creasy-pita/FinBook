@@ -1,3 +1,32 @@
+2018-5-23
+identity 自定义validtor
+	自定义 SmsAuthCodeValidator, 实现 IExtensionGrantValidator
+	
+	创建 验证码验证服务接口IAuthCodeService，TestAuthCodeService,user服务接口 IUserService
+identity 与 userservice 互通
+	指定 userserviceUrl = "http:localhost"
+	创建 HttpClient
+	UserService中 发起HttpPost 使用user.api 对phone进行验证
+集成identityserver4到 user.identity	
+	创建 client, apiresource,userresource对象
+		GrantType ="sms_auth_code"
+		new apiresource{"user_api","user service"}	
+	user.identity 引入 identityserver4
+            services.AddIdentityServer()
+                    .AddExtensionGrantValidator<SmsAuthCodeValidator>()
+                    .AddDeveloperSigningCredential()
+                    .AddInMemoryApiResources(Config.GetResource())
+                    .AddInMemoryClients(Config.GetClient())
+                    .AddInMemoryIdentityResources(Config.GetIdentityResources());		
+	
+
+	
+	startup configservice中注册 内存式的 client, apiresource,userresource
+	
+	postman  访问 user.identity  下 /connect/token 获取 token
+		调用SmsAuthCodeValidator 的验证方法
+			验证方法中 发起HttpPost 使用user.api 对phone进行验证
+
 2018-5-22
 加入 api 网关  gataway.api
 	1 创建webapi 项目  gataway.api
