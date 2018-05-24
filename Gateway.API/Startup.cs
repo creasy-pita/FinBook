@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,14 +26,17 @@ namespace Gateway.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var authenticationProviderKey = "TestKey";
+            var authenticationProviderKey = "finbook";
 
             services.AddAuthentication()
-                .AddJwtBearer(authenticationProviderKey, x =>
+                .AddIdentityServerAuthentication(authenticationProviderKey, options =>
                 {
-                    x.Authority = "test";
-                    x.Audience = "test";
-                    x.RequireHttpsMetadata = false;
+                    //options.Authority = "https://localhost:50255";
+                    options.Authority = "http://localhost:50255";
+                    options.ApiName = "gateway_api";
+                    options.SupportedTokens = SupportedTokens.Both;
+                    options.ApiSecret = "secret";
+                    options.RequireHttpsMetadata = false;
                 });
 
 

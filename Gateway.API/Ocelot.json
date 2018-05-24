@@ -10,13 +10,10 @@
           }
         ],
         "UpstreamPathTemplate": "/user/{all}",
-        "UpstreamHttpMethod": [ "Get" ],
+        "UpstreamHttpMethod": [ "Get","Post" ],
         "AuthenticationOptions": {
-          "AuthenticationProviderKey": "TestKey",
+          "AuthenticationProviderKey": "finbook",
           "AllowedScopes": []
-        },
-        "RouteClaimsRequirement": {
-          "UserType": "registered"
         }
       }
 

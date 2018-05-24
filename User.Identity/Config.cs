@@ -13,7 +13,7 @@ namespace User.Identity
         {
 
             return new ApiResource[]{
-                new ApiResource("user_api","user service")
+                new ApiResource("gateway_api","user service")
             };
         }
 
@@ -29,7 +29,7 @@ namespace User.Identity
                     AllowedGrantTypes=new List<string>{ "sms_auth_code"},
                     AlwaysIncludeUserClaimsInIdToken=true,
                     AllowedScopes = new List<string>{
-                        "user_api",
+                        "gateway_api",
                         IdentityServerConstants.StandardScopes.OfflineAccess,
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile

@@ -1,5 +1,6 @@
 2018-5-23
-identity 自定义validtor
+
+identity 自定义validtor 
 	自定义 SmsAuthCodeValidator, 实现 IExtensionGrantValidator
 	
 	创建 验证码验证服务接口IAuthCodeService，TestAuthCodeService,user服务接口 IUserService
@@ -27,6 +28,23 @@ identity 与 userservice 互通
 		调用SmsAuthCodeValidator 的验证方法
 			验证方法中 发起HttpPost 使用user.api 对phone进行验证
 
+gateway.api 集成identity
+	
+错误汇总
+	拿到访问令牌 postman 去访问 user.api的资源时提示错误
+	Unable to obtain configuration from: 'https://localhost:50255/.well-known/openid-configuration'.
+		解决： gateway.api 注册identityservier时 修改https 为 http 
+					services.AddAuthentication()
+						.AddIdentityServerAuthentication(authenticationProviderKey, options =>
+						{
+							//options.Authority = "https://localhost:50255";
+							options.Authority = "http://localhost:50255";
+							options.ApiName = "gateway_api";
+							options.SupportedTokens = SupportedTokens.Both;
+							options.ApiSecret = "secret";
+							options.RequireHttpsMetadata = false;
+						});		
+
 2018-5-22
 加入 api 网关  gataway.api
 	1 创建webapi 项目  gataway.api
@@ -52,7 +70,9 @@ identity 与 userservice 互通
 	
 	4 program 中读取配置
 	5 startup 中注入服务 ， 加入中间件
-
+1 参加数据研发部会议
+2 电子证照工具测试问题协助检查
+3 衢州龙游政务网推送一窗工具问题检查
 
 2018-5-21
 dbcontext 和 model 准备
