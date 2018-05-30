@@ -1,3 +1,38 @@
+2018-5-30
+	微服务之间的发现
+		微服务a使用 consul  dnsclient  来发现微服务b
+	
+	参考资料：
+		注册服务发现：
+			http://michaco.net/blog/ServiceDiscoveryAndHealthChecksInAspNetCoreWithConsul?tag=Microservices
+2018-5-24
+
+
+Ocelot 集成consul服务发现
+	下载和安装consul 
+	开启consul   默认ui  和 consul服务发现监听端口 8500； 命令：consul agent -dev
+	创建api1,api2 并使用consul服务; 
+		api1 创建 HealthCheckController
+		引入 Consul 包
+		api1 startup config中 注册到consul服务
+		
+	创建Ocelot  gateway.api
+		创建Ocelot.json
+		创建webhost 时加入Ocelot.json
+		依赖注入和加入中间件
+	参考资料：
+		Consul 
+			https://www.consul.io/intro/getting-started/services.html
+		Ocelot 配置
+			configurtion 模板
+				http://ocelot.readthedocs.io/en/latest/features/configuration.html
+			servicediscovery
+				http://ocelot.readthedocs.io/en/latest/features/servicediscovery.html
+	错误汇总
+		测试 gateway.api 访问api1的资源时报错
+			原因：创建webhost 时加入Ocelot.json 这一步未做
+				时间花费在 对json 文件内容的检查 而没有 跳出 去查看真实原因
+	
 2018-5-23
 
 identity 自定义validtor 

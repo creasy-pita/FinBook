@@ -1,21 +1,33 @@
 {
-    "ReRoutes": [
-      {
-        "DownstreamPathTemplate": "/api/user/{all}",
-        "DownstreamScheme": "http",
-        "DownstreamHostAndPorts": [
-          {
-            "Host": "localhost",
-            "Port": 56688
-          }
-        ],
-        "UpstreamPathTemplate": "/user/{all}",
-        "UpstreamHttpMethod": [ "Get","Post" ],
-        "AuthenticationOptions": {
-          "AuthenticationProviderKey": "finbook",
-          "AllowedScopes": []
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/user/{all}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 56688
         }
+      ],
+      "UpstreamPathTemplate": "/user/{all}",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "finbook",
+        "AllowedScopes": []
       }
+    },
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 50255
+        }
+      ],
+      "UpstreamPathTemplate": "/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    }
 
-    ]
+  ]
 }
