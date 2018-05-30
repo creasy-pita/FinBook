@@ -1,10 +1,25 @@
 2018-5-30
 	微服务之间的发现
-		微服务a使用 consul  dnsclient  来发现微服务b
-	
+		微服务user.identity使用 consul  dnsclient  来发现微服务user.api 
+		user.identity 通过dnsclient 传递servicename通过consul端口 发现 之前注册在consul服务中的user.api 
 	参考资料：
 		注册服务发现：
 			http://michaco.net/blog/ServiceDiscoveryAndHealthChecksInAspNetCoreWithConsul?tag=Microservices
+			
+	错误汇总
+	
+	
+		_dns.ResolveServiceAsync("service.consul", _options.Value.ServiceName)没有返回列表
+			检查方式：
+				跟之前简单注册可以成功的方式进行对比， 
+				采用排除法 调整 端口，host 为固定的值，都没有成功，最好调整ServiceName 为固定值是发现 带 【.】 不行
+				
+		
+			当 _options.Value.ServiceName ="User.API" 没有返回列表
+			当 _options.Value.ServiceName ="UserAPI" 有返回列表
+	经验：
+		当有一个成功实例时
+		参考再做时如果有问题，要全面考虑涉及的关键变量值是否相同，再是所有变量值是否一致
 2018-5-24
 
 
