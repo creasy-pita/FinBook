@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using BuildingBlocks.Resilience.Http;
 using DnsClient;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using User.API.Identity.Dto;
 using User.Identity.Authentication;
+using User.Identity.Infrastructure;
 using User.Identity.Services;
 using User.Identity.Test;
 
@@ -42,6 +46,7 @@ namespace User.Identity
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
 
 
+
             services.AddSingleton<IDnsQuery>(p =>
             {
                 return new LookupClient(IPAddress.Parse("127.0.0.1"), 8600);
@@ -49,6 +54,36 @@ namespace User.Identity
 
             services.AddScoped<IAuthCodeService, TestAuthCodeService>();
             services.AddScoped<IUserService, UserServcie>();
+
+            if (Configuration.GetValue<string>("UseResilientHttp") == bool.TrueString)
+            {
+                services.AddSingleton<IResilientHttpClientFactory, ResilientHttpClientFactory>(sp =>
+                {
+                    var logger = sp.GetRequiredService<ILogger<ResilientHttpClient>>();
+                    var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+
+                    var retryCount = 6;
+                    if (!string.IsNullOrEmpty(Configuration["HttpClientRetryCount"]))
+                    {
+                        retryCount = int.Parse(Configuration["HttpClientRetryCount"]);
+                    }
+
+                    var exceptionsAllowedBeforeBreaking = 5;
+                    if (!string.IsNullOrEmpty(Configuration["HttpClientExceptionsAllowedBeforeBreaking"]))
+                    {
+                        exceptionsAllowedBeforeBreaking = int.Parse(Configuration["HttpClientExceptionsAllowedBeforeBreaking"]);
+                    }
+
+                    return new ResilientHttpClientFactory(logger, httpContextAccessor, exceptionsAllowedBeforeBreaking, retryCount);
+                });
+                services.AddSingleton<IHttpClient, ResilientHttpClient>(sp => sp.GetService<IResilientHttpClientFactory>().CreateResilientHttpClient());
+            }
+            else
+            {
+                services.AddSingleton<IHttpClient, StandardHttpClient>();
+            }
+
+
             services.AddMvc();
         }
 

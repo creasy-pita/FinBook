@@ -38,10 +38,45 @@ namespace BuildingBlocks.Resilience.Http
         }
 
 
-        public Task<HttpResponseMessage> PostAsync<T>(string uri, T item, string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
+        public Task<HttpResponseMessage> PostAsync(string uri, FormUrlEncodedContent content, string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
         {
-            return DoPostPutAsync(HttpMethod.Post, uri, item, authorizationToken, requestId, authorizationMethod);
+            // a new StringContent must be created for each retry 
+            // as it is disposed after each call
+            var origin = GetOriginFromUri(uri);
+
+            return HttpInvoker(origin, async (context) =>
+            {
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+
+                SetAuthorizationHeader(requestMessage);
+                //TBD
+                //requestMessage.Content =content; 
+                requestMessage.Content = new StringContent(JsonConvert.SerializeObject(content), System.Text.Encoding.UTF8, "application/json");
+
+                if (authorizationToken != null)
+                {
+                    requestMessage.Headers.Authorization = new AuthenticationHeaderValue(authorizationMethod, authorizationToken);
+                }
+
+                if (requestId != null)
+                {
+                    requestMessage.Headers.Add("x-requestid", requestId);
+                }
+
+                var response = await _client.SendAsync(requestMessage);
+
+                // raise exception if HttpResponseCode 500 
+                // needed for circuit breaker to track fails
+
+                if (response.StatusCode == HttpStatusCode.InternalServerError)
+                {
+                    throw new HttpRequestException();
+                }
+
+                return response;
+            });
         }
+
 
         public Task<HttpResponseMessage> PutAsync<T>(string uri, T item, string authorizationToken = null, string requestId = null, string authorizationMethod = "Bearer")
         {
@@ -53,8 +88,7 @@ namespace BuildingBlocks.Resilience.Http
             var origin = GetOriginFromUri(uri);
 
 
-            //return HttpInvoker(origin,async( context )=> { return await _client.SendAsync(new HttpRequestMessage(HttpMethod.Delete, uri)); });
-            return HttpInvoker(origin, async () =>
+            return HttpInvoker(origin, async (context) =>
             {
                 var requestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
 
@@ -82,7 +116,7 @@ namespace BuildingBlocks.Resilience.Http
         {
             var origin = GetOriginFromUri(uri);
 
-            return HttpInvoker(origin, async () =>
+            return HttpInvoker(origin, async (context) =>
             {
                 var requestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
 
@@ -123,13 +157,16 @@ namespace BuildingBlocks.Resilience.Http
             // as it is disposed after each call
             var origin = GetOriginFromUri(uri);
 
-            return HttpInvoker(origin, async () =>
+            return HttpInvoker(origin, async (context) =>
             {
                 var requestMessage = new HttpRequestMessage(method, uri);
 
                 SetAuthorizationHeader(requestMessage);
-
-                requestMessage.Content = new StringContent(JsonConvert.SerializeObject(item), System.Text.Encoding.UTF8, "application/json");
+                //TBD
+                Dictionary<string, string> form = new Dictionary<string, string> { { "phone", "2" } };
+                var content = new FormUrlEncodedContent(form);
+                requestMessage.Content = content;
+                //requestMessage.Content = new StringContent(JsonConvert.SerializeObject(item), System.Text.Encoding.UTF8, "application/json");
 
                 if (authorizationToken != null)
                 {
@@ -155,21 +192,6 @@ namespace BuildingBlocks.Resilience.Http
             });
         }
 
-        private async Task<T> HttpInvoker<T>(string origin, Func<Task<T>> action)
-        {
-            var normalizedOrigin = NormalizeOrigin(origin);
-
-            if (!_policyWrappers.TryGetValue(normalizedOrigin, out PolicyWrap policyWrap))
-            {
-                policyWrap = Policy.WrapAsync(_policyCreator(normalizedOrigin).ToArray());
-                _policyWrappers.TryAdd(normalizedOrigin, policyWrap);
-            }
-
-            // Executes the action applying all 
-            // the policies defined in the wrapper
-            return await policyWrap.ExecuteAsync(action, new Context(normalizedOrigin));
-        }
-
         private async Task<T> HttpInvoker<T>(string origin, Func<Context, Task<T>> action)
         {
             var normalizedOrigin = NormalizeOrigin(origin);
@@ -184,7 +206,6 @@ namespace BuildingBlocks.Resilience.Http
             // the policies defined in the wrapper
             return await policyWrap.ExecuteAsync(action, new Context(normalizedOrigin));
         }
-
 
         private static string NormalizeOrigin(string origin)
         {
