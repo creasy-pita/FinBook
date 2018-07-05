@@ -1,11 +1,3 @@
-
-准备  ResilientHttpClient  
-在startup中将 ResilientHttpClient注入容器，在userservice 的httpclient 注入 ResilientHttpClient
-	预先定义 IHttpClient
-	userservice 使用 IHttpClient
-
-
-
 dbcontext 和 model 准备
     1 创建appuserdbcontext,appuser
         data/appuserdbcontext,model/appuser

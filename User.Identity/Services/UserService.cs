@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.Resilience.Http;
-using DnsClient;
+﻿using DnsClient;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -13,12 +12,11 @@ namespace User.Identity.Services
     public class UserServcie: IUserService
     {
         private string userServiceUrl = "http://localhost:56688/";
-        //private HttpClient _httpClient;
-        private IHttpClient _httpClient;
+        private HttpClient _httpClient;
         private IDnsQuery _dns;
         private IOptions<ServiceDisvoveryOptions> _options;
 
-        public UserServcie(IHttpClient httpClient,IDnsQuery dns, IOptions<ServiceDisvoveryOptions> options)
+        public UserServcie(HttpClient httpClient,IDnsQuery dns, IOptions<ServiceDisvoveryOptions> options)
         {
             _dns = dns ?? throw new ArgumentNullException(nameof(dns));
             _options = options ?? throw new ArgumentNullException(nameof(options));
@@ -30,7 +28,7 @@ namespace User.Identity.Services
             var result = await _dns.ResolveServiceAsync("service.consul", _options.Value.ServiceName);
 
             var addressList = result.First().AddressList;
-            var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName.TrimEnd('.');
+            var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName;
             var port = result.First().Port;
             userServiceUrl = $"http://{address}:{port}/";
             

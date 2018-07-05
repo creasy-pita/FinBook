@@ -1,26 +1,3 @@
-2018-7-5
-	使用polly
-		超时与重试（Timeout and Retry)
-		限流（Rate Limiting)
-		熔断器（Circuit Breaker)
-		舱壁隔离(Bulkhead Isolation)
-		回退(Fallback)	
-	准备  ResilientHttpClient ResilientHttpClientFactory 
-		在 ResilientHttpClientFactory 中准备 polly 的定义处理规则
-		在startup中将 ResilientHttpClient注入容器，在userservice 的httpclient 注入 ResilientHttpClient
-		预先定义 IHttpClient
-		userservice 使用 IHttpClient
-		
-	错误处理：
-		ResilientHttpClient 从 eShopOnContainers项目参考
-			其中requestMessage.Content 从使用 StringContent 修改为 FormUrlEncodedContent
-		dnsresult.First().HostName  返回值  ：localhost. 会多一个 [.]
-			修改
-				var result = await _dns.ResolveServiceAsync("service.consul", _options.Value.ServiceName);
-				var addressList = result.First().AddressList;
-				var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName.TrimEnd('.');		
-	参考资料：
-		https://www.cnblogs.com/jesse2013/p/polly-docs.html
 2018-5-30
 	微服务之间的发现
 		微服务user.identity使用 consul  dnsclient  来发现微服务user.api 
@@ -58,8 +35,6 @@ Ocelot 集成consul服务发现
 		创建Ocelot.json
 		创建webhost 时加入Ocelot.json
 		依赖注入和加入中间件
-	consul  ui
-		默认 http://localhsot:8500
 	参考资料：
 		Consul 
 			https://www.consul.io/intro/getting-started/services.html
@@ -145,6 +120,9 @@ gateway.api 集成identity
 	
 	4 program 中读取配置
 	5 startup 中注入服务 ， 加入中间件
+1 参加数据研发部会议
+2 电子证照工具测试问题协助检查
+3 衢州龙游政务网推送一窗工具问题检查
 
 2018-5-21
 dbcontext 和 model 准备
