@@ -29,6 +29,11 @@ namespace User.API.Controllers
         [HttpPost]
         public int CheckOrCreate(string phone)
         {
+            //System.IO.Stream s = HttpContext.Request.;
+            //byte[] buffer = new byte[s.Length];
+            //s.Read(buffer, 0, buffer.Length);
+            //string sss = System.Text.Encoding.UTF8.GetString(buffer);
+
             if (phone == "2")
             {
                 return 1;
