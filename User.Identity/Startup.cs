@@ -20,7 +20,7 @@ namespace User.Identity
 {
     public class Startup
     {
-
+        public static ILogger _log = null;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -88,16 +88,18 @@ namespace User.Identity
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            loggerFactory.AddLog4Net();
             app.UseIdentityServer();
             app.UseMvc();
-
+            _log = loggerFactory.CreateLogger("info");
+            loggerFactory.CreateLogger("init").LogDebug($"ini2222t");
+            loggerFactory.CreateLogger("init").LogDebug($"***************************");
             //app.Run(async (context) =>
             //{
             //    await context.Response.WriteAsync("Hello World!");

@@ -1,3 +1,9 @@
+2018-7-6
+
+其他类给当前类扩展方法
+	public static ILogFactory AddLog4net(this ILogFactory logFactory);
+
+
 2018-7-5
 	使用polly
 		超时与重试（Timeout and Retry)

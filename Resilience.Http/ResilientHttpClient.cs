@@ -50,8 +50,7 @@ namespace BuildingBlocks.Resilience.Http
 
                 SetAuthorizationHeader(requestMessage);
                 //TBD
-                //requestMessage.Content =content; 
-                requestMessage.Content = new StringContent(JsonConvert.SerializeObject(content), System.Text.Encoding.UTF8, "application/json");
+                requestMessage.Content =content; 
 
                 if (authorizationToken != null)
                 {
@@ -162,11 +161,7 @@ namespace BuildingBlocks.Resilience.Http
                 var requestMessage = new HttpRequestMessage(method, uri);
 
                 SetAuthorizationHeader(requestMessage);
-                //TBD
-                Dictionary<string, string> form = new Dictionary<string, string> { { "phone", "2" } };
-                var content = new FormUrlEncodedContent(form);
-                requestMessage.Content = content;
-                //requestMessage.Content = new StringContent(JsonConvert.SerializeObject(item), System.Text.Encoding.UTF8, "application/json");
+                requestMessage.Content = new StringContent(JsonConvert.SerializeObject(item), System.Text.Encoding.UTF8, "application/json");
 
                 if (authorizationToken != null)
                 {

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using User.API.Identity.Dto;
+using Microsoft.Extensions.Logging;
+
 
 namespace User.Identity.Services
 {
@@ -17,6 +19,7 @@ namespace User.Identity.Services
         private IHttpClient _httpClient;
         private IDnsQuery _dns;
         private IOptions<ServiceDisvoveryOptions> _options;
+
 
         public UserServcie(IHttpClient httpClient,IDnsQuery dns, IOptions<ServiceDisvoveryOptions> options)
         {
@@ -33,8 +36,7 @@ namespace User.Identity.Services
             var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName.TrimEnd('.');
             var port = result.First().Port;
             userServiceUrl = $"http://{address}:{port}/";
-            
-
+            Startup._log.LogError("userservices.........");
             Dictionary<string, string> form = new Dictionary<string, string> { { "phone", phone } };
             var content = new FormUrlEncodedContent(form);
 
