@@ -97,9 +97,6 @@ namespace User.Identity
             loggerFactory.AddLog4Net();
             app.UseIdentityServer();
             app.UseMvc();
-            _log = loggerFactory.CreateLogger("info");
-            loggerFactory.CreateLogger("init").LogDebug($"ini2222t");
-            loggerFactory.CreateLogger("init").LogDebug($"***************************");
             //app.Run(async (context) =>
             //{
             //    await context.Response.WriteAsync("Hello World!");

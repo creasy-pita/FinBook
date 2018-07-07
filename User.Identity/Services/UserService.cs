@@ -19,13 +19,15 @@ namespace User.Identity.Services
         private IHttpClient _httpClient;
         private IDnsQuery _dns;
         private IOptions<ServiceDisvoveryOptions> _options;
+        private ILogger<UserServcie> _logger;
 
 
-        public UserServcie(IHttpClient httpClient,IDnsQuery dns, IOptions<ServiceDisvoveryOptions> options)
+        public UserServcie(IHttpClient httpClient,IDnsQuery dns, IOptions<ServiceDisvoveryOptions> options,ILogger<UserServcie> logger)
         {
             _dns = dns ?? throw new ArgumentNullException(nameof(dns));
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _httpClient = httpClient;
+            _logger = logger;
         }
 
         public async Task<int> CheckOrCreate(string phone)
@@ -36,7 +38,7 @@ namespace User.Identity.Services
             var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName.TrimEnd('.');
             var port = result.First().Port;
             userServiceUrl = $"http://{address}:{port}/";
-            Startup._log.LogError("userservices.........");
+            _logger.LogInformation("i am  the internal  logging framework;");
             Dictionary<string, string> form = new Dictionary<string, string> { { "phone", phone } };
             var content = new FormUrlEncodedContent(form);
 
