@@ -1,4 +1,5 @@
-﻿using Project.Domain.SeedWork;
+﻿using Project.Domain.Events;
+using Project.Domain.SeedWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -194,6 +195,26 @@ namespace Project.Domain.AggregatesModel
             return newProject;
         }
 
+        public Project ContributorFork(int contributorId, Project source = null)
+        {
+            if (source == null)
+                source = this;
+            var newProject = CloneProject(source);
+            newProject.UserId = contributorId;
+            newProject.SourceId = source.SourceId == 0 ? source.Id : source.SourceId;
+            //TBD
+            newProject.ReferenceId = source.ReferenceId == 0 ? source.Id : source.ReferenceId;
+            newProject.UpdateTime = DateTime.Now;
+            return newProject;
+        }
+
+        public Project()
+        {
+            this.Viewers = new List<ProjectViewer>();
+            this.Contributors = new List<ProjectContributor>();
+            this.AddDomainEvent(new ProjectCreatedEvent { Project = this });
+        }
+
         public void AddViewer(int userId, string userName, string avatar)
         {
             var viewer = new ProjectViewer
@@ -204,15 +225,16 @@ namespace Project.Domain.AggregatesModel
             };
             if (!Viewers.Any(v => v.UserId == userId))
             {
+                this.AddDomainEvent(new ProjectViewedEvent { Viewer = viewer });
                 Viewers.Add(viewer);
             }
         }
 
         public void AddContributor(ProjectContributor contributor)
         {
-
             if (!Contributors.Any(v => v.Id == contributor.Id))
             {
+                this.AddDomainEvent(new ProjectJoinedEvent { Contributor = contributor });
                 Contributors.Add(contributor);
             }
         }

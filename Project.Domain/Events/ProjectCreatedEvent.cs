@@ -1,10 +1,12 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Text;
-
+using ProjectEntity =  Project.Domain.AggregatesModel.Project;
 namespace Project.Domain.Events
 {
-    class ProjectCreatedEvent
+    public class ProjectCreatedEvent: INotification
     {
+        public ProjectEntity Project { get; set; }
     }
 }
