@@ -41,14 +41,23 @@ namespace User.Identity.Services
             _logger.LogInformation("i am  the internal  logging framework;");
             Dictionary<string, string> form = new Dictionary<string, string> { { "phone", phone } };
             var content = new FormUrlEncodedContent(form);
-
-            var response = await _httpClient.PostAsync(userServiceUrl+"api/user/check-or-create", content);
-            if(response.StatusCode == System.Net.HttpStatusCode.OK)
+            try
             {
-                var result1 = await response.Content.ReadAsStringAsync();
-                int.TryParse(result1, out int userId);
-                return userId;
+
+                var response = await _httpClient.PostAsync(userServiceUrl + "api/user/check-or-create", content);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var result1 = await response.Content.ReadAsStringAsync();
+                    int.TryParse(result1, out int userId);
+                    return userId;
+                }
             }
+            catch (Exception ex)
+            {
+                _logger.LogError("重试失败。。。。。"+ ex.Message);
+                return 0;
+            }
+
             return 0;
         }
     }

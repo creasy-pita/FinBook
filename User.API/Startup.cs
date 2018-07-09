@@ -96,7 +96,7 @@ namespace User.API
 
                 var httpCheck = new AgentServiceCheck()
                 {
-                    DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
+                    DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(30),
                     Interval = TimeSpan.FromSeconds(30),
                     HTTP = new Uri(address, "HealthCheck").OriginalString
                 };
