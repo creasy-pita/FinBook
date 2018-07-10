@@ -1,3 +1,80 @@
+2018-7-10
+课程笔记
+	项目服务实现
+
+	
+	
+	通过MediatR 完成api 对Command 调用
+		webapi层 项目create,view，join 实现
+			httppost  Project对象
+			创建 ProjectCreateCommand
+			MediatR发送command 请求
+				MediaR 发布订阅可以查看官网文档
+					https://github.com/jbogard/MediatR/wiki
+			配置MediatR
+				添加用于aspnetcore 单独包
+				  MediatR.Extensions.Microsoft.DependencyInjection
+				方法：AddMediatR 其实是在 Microsoft.Extension.DependencyInjection.MediatR中，但是是对 IServiceCollection services的扩展，所以需要引入 Microsoft.Extension.DependencyInjection.MediatR
+			ProjectController 继承BaseController 可以获取当前登入的用户信息
+			
+	 CommanHandler 处理方法中 IProjectRepository 实现类 ProjectRepository EF 的实现
+		基础层
+			添加EF ,实现 IProjectReport
+			
+	跨服务的调用
+			
+ProjectController 继承 BaseControoler
+			
+
+搭建CQRS框架步骤
+	domain
+		领域事件：ProjectCreateEvent
+			会在 加入 domainEvents列表
+	
+		
+	
+	command  handler：create，view,join
+	queries-project list,project detail
+	
+推荐服务
+	获取推荐列表，领域集成事件
+
+应用层	
+	commandHandler
+		处理command 和业务持久化
+	command
+领域层
+	领域事件：
+		ProjectCreateEvent ：
+
+
+MediatR	的使用
+	一对一 发送消息请求， 直接返回response
+		相关类
+			IRequest IRequestHandler
+		消息	
+			定义代码
+				public class Ping : IRequest<string> { }
+		消息处理者
+			会定义处理方法，会传入消息对象， <Ping, string> 代表输入消息对象Ping, 返回string
+			处理者代码
+				public class PingHandler : IRequestHandler<Ping, string> {
+					public Task<string> Handle(Ping request, CancellationToken cancellationToken) {
+						return Task.FromResult("Pong");
+					}
+				}			
+		发送消息
+			会执行之前定义的处理方法
+			执行代码
+				var response = await mediator.Send(new Ping());
+				Debug.WriteLine(response); // "Pong"
+		
+		
+		发送消息后不需要返回值情形：
+	一对多 ：发布 订阅，不会有返回信息
+			相关类 INotification 
+
+
 2018-7-6
 
 其他类给当前类扩展方法

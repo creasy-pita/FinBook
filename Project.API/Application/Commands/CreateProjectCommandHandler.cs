@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Project.Domain.AggregatesModel;
 
 namespace Project.API.Application.Commands
 {
