@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MediatR;
+using Project.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Project.API
 {
@@ -24,6 +26,10 @@ namespace Project.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddDbContext<ProjectContext>(options =>
+options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+
             //AddMediatR 其实是在 Microsoft.Extension.DependencyInjection.MediatR中，但是是对 IServiceCollection services的扩展，所以需要引入 Microsoft.Extension.DependencyInjection.MediatR
             services.AddMediatR();
             services.AddMvc();

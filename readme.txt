@@ -1,4 +1,27 @@
 2018-7-10
+PowerShell 使用
+	搜索
+		Find-Package  "MySql.Data.EntityFrameworkCore"
+	安装
+		Install-Package MySql.Data.EntityFrameworkCore -Version 8.0.11
+	卸载
+		Uninstall-Package MySql.Data.EntityFrameworkCore -Version 8.0.11
+	注：各版本的命令 不同
+
+EF  migration  
+
+
+
+Mediat 
+	发送领域事件
+
+	发送领域集成事件
+		消息 发送 处理中Handler 类在接收到发送的消息去执行 Handler 方法时 可以选择发送领域集成事件，通过eventbus 广播到跨服务
+
+
+
+
+2018-7-10
 课程笔记
 	项目服务实现
 
@@ -19,10 +42,15 @@
 			
 	 CommanHandler 处理方法中 IProjectRepository 实现类 ProjectRepository EF 的实现
 		基础层
-			添加EF ,实现 IProjectReport
-			
+			添加EF ,实现 IProjectRepository
+			ProjectDbContext 实现
+				
 	跨服务的调用
-			
+
+补充 
+	EF 基础类的实现 
+	再检视一遍EF 的 Quick Overview的知识结果
+			资料： https://docs.microsoft.com/en-us/ef/core/
 ProjectController 继承 BaseControoler
 			
 

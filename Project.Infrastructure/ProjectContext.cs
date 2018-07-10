@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Project.Domain.SeedWork;
+using Project.Infrastructure.EntityConfigurations;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,9 +11,10 @@ namespace Project.Infrastructure
 {
     public class ProjectContext : DbContext, IUnitOfWork
     {
-        public const string DEFAULT_SCHEMA = "project";
 
         private readonly IMediator _mediator;
+
+        public DbSet<Domain.AggregatesModel.Project> Projects { get; set; }
 
         private ProjectContext(DbContextOptions<ProjectContext> options) : base (options) { }
 
@@ -21,11 +23,21 @@ namespace Project.Infrastructure
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
 
-            System.Diagnostics.Debug.WriteLine("OrderingContext::ctor ->" + this.GetHashCode());
+            System.Diagnostics.Debug.WriteLine("ProjectContext::ctor ->" + this.GetHashCode());
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<Domain.AggregatesModel.Project>(b => 
+            //        b.ToTable("Projects")
+            //        .HasKey(t => t.Id)
+            //    );
+            //改用ApplyConfiguration 方法配置
+            modelBuilder.ApplyConfiguration(new ProjectEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectContributorEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectPropertyEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectViewerEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectVisibleRulesEntityTypeConfiguration());
             //modelBuilder.ApplyConfiguration(new ClientRequestEntityTypeConfiguration());
             //modelBuilder.ApplyConfiguration(new PaymentMethodEntityTypeConfiguration());
             //modelBuilder.ApplyConfiguration(new OrderEntityTypeConfiguration());

@@ -24,7 +24,7 @@ namespace Project.API.Application.Commands
                 throw new Domain.Exceptions.ProjectDomainException($"Project not found :{request.ProjectId}");
             }
             project.AddViewer(request.UserId, request.UserName, request.Avatar);
-            await _projectRepository.UnitOfWork.SaveChangesAsync();
+            await _projectRepository.UnitOfWork.SaveEntitiesAsync();
             return true;
         }
     }

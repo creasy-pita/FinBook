@@ -4,6 +4,8 @@ using Project.Domain.SeedWork;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Project.Infrastructure.Repositories
 {
@@ -24,19 +26,24 @@ namespace Project.Infrastructure.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Task<Domain.AggregatesModel.Project> GetAsync(int id)
+        public async Task<Domain.AggregatesModel.Project> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.FindAsync<Domain.AggregatesModel.Project>(id);
         }
 
-        public Task<Domain.AggregatesModel.Project> AddAsync(Domain.AggregatesModel.Project project)
+        public Domain.AggregatesModel.Project Add(Domain.AggregatesModel.Project project)
         {
-            throw new NotImplementedException();
+            if (project.IsTransient())
+            {
+                _context.Add(project);
+            }
+            return project;
         }
 
-        public Task<Domain.AggregatesModel.Project> UpdateAsync(Domain.AggregatesModel.Project project)
+        public Domain.AggregatesModel.Project Update(Domain.AggregatesModel.Project project)
         {
-            throw new NotImplementedException();
+            _context.Update(project);
+            return project;
         }
     }
 }
