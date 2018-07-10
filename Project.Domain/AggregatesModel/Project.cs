@@ -12,7 +12,7 @@ namespace Project.Domain.AggregatesModel
         /// 用户id
         /// </summary>
         public int UserId { get; set; }
-        public int Id { get; set; }
+       // public override int Id { get; protected set; }
         /// <summary>
         /// 公司
         /// </summary>

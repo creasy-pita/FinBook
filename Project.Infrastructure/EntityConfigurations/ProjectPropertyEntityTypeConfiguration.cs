@@ -11,7 +11,7 @@ namespace Project.Infrastructure.EntityConfigurations
         public void Configure(EntityTypeBuilder<Domain.AggregatesModel.ProjectProperty> builder)
         {
             builder.ToTable("ProjectProperties")
-            .HasKey(t => t.Key);
+            .HasKey(t => new { t.Key,t.ProjectId,  t.Value});
         }
     }
 }

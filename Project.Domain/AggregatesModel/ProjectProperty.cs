@@ -1,6 +1,7 @@
 ﻿using Project.Domain.SeedWork;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Project.Domain.AggregatesModel
 {
@@ -20,6 +21,7 @@ namespace Project.Domain.AggregatesModel
         /// <summary>
         /// 
         /// </summary>
+        [MaxLength(100)]
         public string Key { get; set; }
         /// <summary>
         /// 
@@ -28,6 +30,7 @@ namespace Project.Domain.AggregatesModel
         /// <summary>
         /// 
         /// </summary>
+        [MaxLength(100)]
         public string Value { get; set; }
 
         protected override IEnumerable<object> GetAtomicValues()

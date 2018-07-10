@@ -21,6 +21,60 @@ Mediat
 
 
 
+mysql
+	安装
+	登录
+	创建用户
+	创建数据库
+		CREATE DATABASE finbook_beta_project CHARACTER SET utf8 COLLATE utf8_general_ci;
+	用户授权
+		GRANT ALL ON finbook_beta_project.* TO 'finbook_test'@'192.168.5.217';
+		GRANT ALL ON *.* TO 'finbook_test'@'%';
+	撤回权限
+		REVOKE ALL PRIVILEGES FROM 'finbook_test'@'192.168.5.217';
+	应用程序 数据库连接串
+		connectionString 为 "Server=192.168.11.83;Database=finbook_metadata;Uid=finbook_test;Pwd=root;Encrypt=true"
+
+错误：
+	The Entity Framework Core Package Manager Console Tools don't support PowerShell version 2.0
+	
+	
+	问题：
+		The 'MySQLNumberTypeMapping' does not support value conversions. Support for value conversions typically requires changes in the database provider.
+	原因：
+		版本 Microsoft.EntityFrameworkCore.Relational 2.1.1可能 和 Mysql.data.EntityFrameworkCore 一起使用有问题
+	解决： 
+		版本修改 都使用2.0.1
+	
+	Unable to cast object of type 'ConcreteTypeMapping' to type 'Microsoft.EntityFrameworkCore.Storage.RelationalTypeMapping'.
+		比较 Project.API  User.API 中  
+			Microsoft.EntityFrameworkCore, Microsoft.EntityFrameworkCore.Relational,MySql.Data.EntityFrameworkCore 
+		不同
+			Microsoft.EntityFrameworkCore 2.1.1 //Project.API
+			Microsoft.EntityFrameworkCore 2.0.1 //User.API
+			
+	问题：Your target project 'Project.API' doesn't match your migrations assembly 'Project.Infrastructure'. Either change your target project or change
+	your migrations assembly.
+	Change your migrations assembly by using DbContextOptionsBuilder. E.g. options.UseSqlServer(connection, b => b.MigrationsAssembly("Project.API")). By default, the migrations assembly is the assembly containing the DbContext.
+	Change your target project to the migrations project by using the Package Manager Console's Default project drop-down list, or by executing "dotnet ef" from the directory containing the migrations project.	
+	解决：
+		options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")
+		, b=>b.MigrationsAssembly(typeof(ProjectContext).Assembly.GetName().Name));
+		修改为
+		options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")
+		,b => b.MigrationsAssembly(typeof(Startup).Assembly.GetName().Name));					
+		
+	问题：Specified key was too long; max key length is 767 bytes
+		`Key` varchar(767) NOT NULL,
+		Value varchar(767) NOT NULL,
+	原因： 
+		主键最长字节限制  3072 bytes
+	解决1：
+		修改Key 的长度为50后 重新 dotnet ef database update 不能成功
+		原因： 结构修改后 需要重新  创建迁移
+			dotnet ef database migrations
+
+		
 2018-7-10
 课程笔记
 	项目服务实现
@@ -274,12 +328,12 @@ dbcontext 和 model 准备
 		dotnet ef migrations add Initdb -c AppUserDbContext -o Data/migrations
 		dotnet ef database update -c AppUserDbContext
     finbook_metadata 库 初始 ef表
-        CREATE TABLE `__EFMigrationsHistory` 
-                ( 
-                    `MigrationId` nvarchar(150) NOT NULL, 
-                    `ProductVersion` nvarchar(32) NOT NULL, 
-                    PRIMARY KEY (`MigrationId`) 
-                );
+CREATE TABLE `__EFMigrationsHistory` 
+		( 
+			`MigrationId` nvarchar(150) NOT NULL, 
+			`ProductVersion` nvarchar(32) NOT NULL, 
+			PRIMARY KEY (`MigrationId`) 
+		);
     
 
 

@@ -28,7 +28,15 @@ namespace Project.API
         {
 
             services.AddDbContext<ProjectContext>(options =>
-options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+                {
+                    options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")
+                    //, builder=>
+                    //builder.MigrationsAssembly(typeof(ProjectContext).Assembly.GetName().Name)
+                    ,b => b.MigrationsAssembly(typeof(Startup).Assembly.GetName().Name)
+                    
+                    );
+                }
+            );
 
             //AddMediatR 其实是在 Microsoft.Extension.DependencyInjection.MediatR中，但是是对 IServiceCollection services的扩展，所以需要引入 Microsoft.Extension.DependencyInjection.MediatR
             services.AddMediatR();
