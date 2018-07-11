@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Project.API.Application.Commands;
+using Project.API.Application.Service;
 using Project.API.Dto;
 using Project.Domain.AggregatesModel;
 
@@ -15,9 +16,11 @@ namespace Project.API.Controllers
     public class ProjectController : BaseController
     {
         private IMediator _mediatR;
-        public ProjectController(IMediator mediator)
+        private IRecommendService _recommendService;
+        public ProjectController(IMediator mediator, IRecommendService recommendService)
         {
             _mediatR = mediator;
+            _recommendService = recommendService;
         }
 
 
@@ -35,16 +38,11 @@ namespace Project.API.Controllers
         [Route("join/{projectId}")]
         public async Task<IActionResult> JoinProject([FromBody]ProjectContributor contributor)
         {
-            //UserIdentity identity = UserIdentity;
-            //ProjectContributor contributor = new ProjectContributor {
-            //    ProjectId = projectId
-            //    ,UserId= identity.UserId
-            //    ,UserName = identity.Name
-            //    ,Avatar = identity.Avatar
-            //    ,CreateTime = DateTime.Now
-            //    ,ContributorType = 1
-            //    ,IsCloser = false
-            //};
+            if (!(await _recommendService.IsProjectRecommend(contributor.ProjectId, UserIdentity.UserId)))
+            {
+                return BadRequest("没有查看该项目的权限");
+            }
+
             JoinProjectCommand command = new JoinProjectCommand {Contributor= contributor };
             var result = await  _mediatR.Send(command, new CancellationToken());
             return Ok(result);
@@ -54,7 +52,10 @@ namespace Project.API.Controllers
         [Route("view/{projectId}")]
         public async Task<IActionResult> ViewProject(int projectId)
         {
-            //TBD 验证是否可以查看此项目
+            if (!(await _recommendService.IsProjectRecommend(projectId, UserIdentity.UserId)))
+            {
+                return BadRequest("没有查看该项目的权限");
+            }
 
             UserIdentity identity = UserIdentity;
             ViewProjectCommand command = new ViewProjectCommand
