@@ -11,6 +11,8 @@ using Microsoft.Extensions.Options;
 using MediatR;
 using Project.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Project.API.Application.Service;
+using Project.API.Application.Queries;
 
 namespace Project.API
 {
@@ -37,6 +39,9 @@ namespace Project.API
                     );
                 }
             );
+
+            services.AddScoped<IRecommendService, RecommendService>()
+                .AddScoped<IProjectQueries, ProjectQueries>();
 
             //AddMediatR 其实是在 Microsoft.Extension.DependencyInjection.MediatR中，但是是对 IServiceCollection services的扩展，所以需要引入 Microsoft.Extension.DependencyInjection.MediatR
             services.AddMediatR();

@@ -1,6 +1,7 @@
 2018-7-11
 	添加项目推荐服务调用
-	
+		创建 RecommendService IRecommendService
+		注入RecommendService
 	添加 ProjectQueries 及 webcontroller 调用
 			创建类
 			实现类
@@ -10,6 +11,7 @@
 		注入 ProjectQueries
 		添加 GetProjects  (Route("my/{projectId}")), GetProjectDetail 
 	
+	IRecommendService
 	
 
 

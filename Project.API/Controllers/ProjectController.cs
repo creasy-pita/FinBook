@@ -75,7 +75,10 @@ namespace Project.API.Controllers
             return Ok(result);
         }
 
-
+        /// <summary>
+        /// 获取用户 自己的项目列表 //TBD
+        /// </summary>
+        /// <returns></returns>
         [Route("")]
         [HttpGet]
         public async Task<IActionResult> GetProjects()
@@ -91,5 +94,18 @@ namespace Project.API.Controllers
             var result = await _projectQueries.GetProjectDetail(projectId,-1);
             return Ok(result);
         }
+        //api/recommend/{projectId}  用户获取推荐项目的 详细信息
+        [Route("recommend/{projectId}")]
+        [HttpGet]
+        public async Task<IActionResult> GetRecommendProjectDetail(int projectId)
+        {
+            if (!(await _recommendService.IsProjectRecommend(projectId, UserIdentity.UserId)))
+            {
+                return BadRequest("没有查看该项目的权限");
+            }
+            var result = await _projectQueries.GetProjectDetail(projectId, -1);
+            return Ok(result);
+        }
+
     }
 }
