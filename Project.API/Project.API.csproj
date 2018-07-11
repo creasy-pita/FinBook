@@ -5,17 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Service\" />
-    <Folder Include="Application\Queries\" />
     <Folder Include="Migrations\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="MediatR" Version="5.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
+	<PackageReference Include="MySql.Data" Version="6.10.7" />
 	<PackageReference Include="MySql.Data.EntityFrameworkCore" Version="6.10.6" />
   </ItemGroup>
 

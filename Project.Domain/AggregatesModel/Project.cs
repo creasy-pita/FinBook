@@ -12,7 +12,12 @@ namespace Project.Domain.AggregatesModel
         /// 用户id
         /// </summary>
         public int UserId { get; set; }
-       // public override int Id { get; protected set; }
+        // public override int Id { get; protected set; }
+
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        public string UserName { get; set; }
         /// <summary>
         /// 公司
         /// </summary>
@@ -37,6 +42,10 @@ namespace Project.Domain.AggregatesModel
         /// </summary>
         public string FormatBPFile { get; set; }
 
+        /// <summary>
+        /// 是否显示敏感信息
+        /// </summary>
+        public bool ShowSecurityInfo { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -98,7 +107,7 @@ namespace Project.Domain.AggregatesModel
         /// <summary>
         /// 估值
         /// </summary>
-        public string Valution { get; set; }
+        public string Valuation { get; set; }
         /// <summary>
         /// 项目标签
         /// </summary>

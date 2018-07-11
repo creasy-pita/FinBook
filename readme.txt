@@ -1,6 +1,16 @@
 2018-7-11
 	添加项目推荐服务调用
-
+	
+	添加 ProjectQueries 及 webcontroller 调用
+			创建类
+			实现类
+				使用Dapper
+				只取表中的部分字段信息 ，所以返回 Task<dynamic>类型
+	ProjectController 中使用 ProjectQueries
+		注入 ProjectQueries
+		添加 GetProjects  (Route("my/{projectId}")), GetProjectDetail 
+	
+	
 
 
 2018-7-10

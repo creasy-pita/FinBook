@@ -63,6 +63,8 @@ namespace Project.API.Migrations
 
                     b.Property<int>("Revenue");
 
+                    b.Property<bool>("ShowSecurityInfo");
+
                     b.Property<int>("SourceId");
 
                     b.Property<string>("Tags");

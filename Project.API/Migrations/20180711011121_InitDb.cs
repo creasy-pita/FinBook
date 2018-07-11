@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Project.API.Migrations
 {
-    public partial class Initdb : Migration
+    public partial class InitDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -34,6 +34,7 @@ namespace Project.API.Migrations
                     ReferenceId = table.Column<int>(nullable: false),
                     RegisterTime = table.Column<DateTime>(nullable: false),
                     Revenue = table.Column<int>(nullable: false),
+                    ShowSecurityInfo = table.Column<bool>(nullable: false),
                     SourceId = table.Column<int>(nullable: false),
                     Tags = table.Column<string>(nullable: true),
                     UpdateTime = table.Column<DateTime>(nullable: false),

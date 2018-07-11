@@ -22,7 +22,6 @@ namespace Project.API.Application.Commands
             if (project == null)
             {
                 throw new Domain.Exceptions.ProjectDomainException($"Project not found :{request.Contributor.ProjectId}");
-
             }
             project.AddContributor(request.Contributor);
            // await _projectRepository.UpdateAsync(project);

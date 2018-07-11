@@ -10,8 +10,8 @@ using System;
 namespace Project.API.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20180710114709_Initdb")]
-    partial class Initdb
+    [Migration("20180711011121_InitDb")]
+    partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -63,6 +63,8 @@ namespace Project.API.Migrations
                     b.Property<DateTime>("RegisterTime");
 
                     b.Property<int>("Revenue");
+
+                    b.Property<bool>("ShowSecurityInfo");
 
                     b.Property<int>("SourceId");
 

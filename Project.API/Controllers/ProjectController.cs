@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Project.API.Application.Commands;
+using Project.API.Application.Queries;
 using Project.API.Application.Service;
 using Project.API.Dto;
 using Project.Domain.AggregatesModel;
@@ -17,12 +18,14 @@ namespace Project.API.Controllers
     {
         private IMediator _mediatR;
         private IRecommendService _recommendService;
-        public ProjectController(IMediator mediator, IRecommendService recommendService)
+        private IProjectQueries _projectQueries;
+
+        public ProjectController(IMediator mediator, IRecommendService recommendService, IProjectQueries projectQueries)
         {
             _mediatR = mediator;
             _recommendService = recommendService;
+            _projectQueries = projectQueries;
         }
-
 
         [HttpPost]
         [Route("")]
@@ -69,6 +72,23 @@ namespace Project.API.Controllers
                 Avatar = identity.Avatar
             };
             var result = await _mediatR.Send(command, new CancellationToken());
+            return Ok(result);
+        }
+
+
+        [Route("")]
+        [HttpGet]
+        public async Task<IActionResult> GetProjects()
+        {
+            var result = await _projectQueries.GetProjectsByUserId(UserIdentity.UserId);
+            return Ok(result);
+        }
+
+        [Route("my/{projectId}")]
+        [HttpGet]
+        public async Task<IActionResult> GetMyProjectDetail(int projectId)
+        {
+            var result = await _projectQueries.GetProjectDetail(projectId,-1);
             return Ok(result);
         }
     }
