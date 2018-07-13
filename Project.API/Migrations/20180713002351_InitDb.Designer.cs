@@ -10,7 +10,7 @@ using System;
 namespace Project.API.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20180711011121_InitDb")]
+    [Migration("20180713002351_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,7 +74,9 @@ namespace Project.API.Migrations
 
                     b.Property<int>("UserId");
 
-                    b.Property<string>("Valution");
+                    b.Property<string>("UserName");
+
+                    b.Property<string>("Valuation");
 
                     b.HasKey("Id");
 

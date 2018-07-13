@@ -39,7 +39,8 @@ namespace Project.API.Migrations
                     Tags = table.Column<string>(nullable: true),
                     UpdateTime = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    Valution = table.Column<string>(nullable: true)
+                    UserName = table.Column<string>(nullable: true),
+                    Valuation = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

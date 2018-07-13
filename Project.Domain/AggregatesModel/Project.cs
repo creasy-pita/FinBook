@@ -193,7 +193,7 @@ namespace Project.Domain.AggregatesModel
                 UserId = source.UserId,
                 Id = source.Id,
 
-                Valution = source.Valution
+                Valuation = source.Valuation
 
             };
             foreach(var item in source.Properties)

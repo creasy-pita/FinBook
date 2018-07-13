@@ -73,7 +73,9 @@ namespace Project.API.Migrations
 
                     b.Property<int>("UserId");
 
-                    b.Property<string>("Valution");
+                    b.Property<string>("UserName");
+
+                    b.Property<string>("Valuation");
 
                     b.HasKey("Id");
 

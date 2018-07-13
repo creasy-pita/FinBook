@@ -13,7 +13,23 @@
       "UpstreamHttpMethod": [ "Get", "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "finbook",
-        "AllowedScopes": []
+        "AllowedScopes": ["user_api"]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/project",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 4313
+        }
+      ],
+      "UpstreamPathTemplate": "/project",
+      "UpstreamHttpMethod": [ "Get","Post" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "finbook",
+        "AllowedScopes": ["project_api"]
       }
     },
     {

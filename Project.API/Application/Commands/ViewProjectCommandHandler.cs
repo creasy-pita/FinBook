@@ -23,6 +23,10 @@ namespace Project.API.Application.Commands
             {
                 throw new Domain.Exceptions.ProjectDomainException($"Project not found :{request.ProjectId}");
             }
+            if (project.UserId == request.UserId)
+            {
+                throw new Domain.Exceptions.ProjectDomainException("cannot view the project which created by youself| 不能查看自己创建的项目");
+            }
             project.AddViewer(request.UserId, request.UserName, request.Avatar);
             await _projectRepository.UnitOfWork.SaveEntitiesAsync();
             return true;

@@ -13,7 +13,9 @@ namespace User.Identity
         {
 
             return new ApiResource[]{
-                new ApiResource("gateway_api","user service")
+                new ApiResource("gateway_api","gateway service"),
+                new ApiResource("user_api","user service"),
+                new ApiResource("project_api","project service")
             };
         }
 
@@ -30,6 +32,8 @@ namespace User.Identity
                     AlwaysIncludeUserClaimsInIdToken=true,
                     AllowedScopes = new List<string>{
                         "gateway_api",
+                        "user_api",
+                        "project_api",
                         IdentityServerConstants.StandardScopes.OfflineAccess,
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile

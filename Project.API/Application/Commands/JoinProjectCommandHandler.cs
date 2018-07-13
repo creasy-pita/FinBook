@@ -23,6 +23,11 @@ namespace Project.API.Application.Commands
             {
                 throw new Domain.Exceptions.ProjectDomainException($"Project not found :{request.Contributor.ProjectId}");
             }
+            if (project.UserId == request.Contributor.UserId)
+            {
+                throw new Domain.Exceptions.ProjectDomainException("cannot join the project which created by youself| 不能参与自己创建的项目");
+            }
+
             project.AddContributor(request.Contributor);
            // await _projectRepository.UpdateAsync(project);
             await _projectRepository.UnitOfWork.SaveEntitiesAsync();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.API.Application.Commands;
 using Project.API.Application.Queries;
@@ -29,8 +30,29 @@ namespace Project.API.Controllers
 
         [HttpPost]
         [Route("")]
+        public async Task<IActionResult> CreateProject()
+        {
+            Domain.AggregatesModel.Project project = new Domain.AggregatesModel.Project();
+            project.Introduction = "公司介绍";
+            project.Company = "creasypita";
+            project.UserId = UserIdentity.UserId;
+            CreateProjectCommand command = new CreateProjectCommand { Project = project };
+            var result = _mediatR.Send(command, new CancellationToken());
+            await result;
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("TBD")]
         public async Task<IActionResult> CreateProject([FromBody]Domain.AggregatesModel.Project project)
         {
+            //TBD  [FromBody] 传值有点问题  先用   非[FromBody] 代替   
+
+            if (project==null)
+            {
+                throw new ArgumentNullException();
+            }
+            project.UserId = UserIdentity.UserId;
             CreateProjectCommand command = new CreateProjectCommand { Project = project};
             var result =_mediatR.Send(command, new CancellationToken());
             await result;
@@ -76,7 +98,7 @@ namespace Project.API.Controllers
         }
 
         /// <summary>
-        /// 获取用户 自己的项目列表 //TBD
+        /// 获取用户 (自己??)的项目列表 //TBD
         /// </summary>
         /// <returns></returns>
         [Route("")]

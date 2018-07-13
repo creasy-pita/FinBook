@@ -28,7 +28,7 @@ projects.Id
 ,projects.ProvinceId
 ,projects.FinStage
 ,projects.FinMoney
-,projects.Valution
+,projects.Valuation
 ,projects.FinPercentage
 ,projects.Introduction
 ,projects.UserId
@@ -38,8 +38,8 @@ projects.Id
 ,projects.BrokerageOption
 ,projectvisiblerules.Tags
 ,projectvisiblerules.Visible
-FROM
-projects INNER JOIN projectvisiblerules
+FROM 
+projects INNER JOIN projectvisiblerules 
 ON projects.Id = projectvisiblerules.ProjectId
 WHERE projects.id = @projectId";
                 return await mySqlConnection.QueryAsync<dynamic>(sql, new { projectId });

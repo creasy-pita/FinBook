@@ -27,11 +27,10 @@ namespace Gateway.API
         public void ConfigureServices(IServiceCollection services)
         {
             var authenticationProviderKey = "finbook";
-
+            //使用指定的Identity Server的认证 对ApiName  gateway_api 访问 需要 Identity Server的认证
             services.AddAuthentication()
                 .AddIdentityServerAuthentication(authenticationProviderKey, options =>
                 {
-                    //options.Authority = "https://localhost:50255";
                     options.Authority = "http://localhost:50255";
                     options.ApiName = "gateway_api";
                     options.SupportedTokens = SupportedTokens.Both;
@@ -41,7 +40,6 @@ namespace Gateway.API
 
 
             services.AddOcelot();
-            //services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,7 +50,6 @@ namespace Gateway.API
                 app.UseDeveloperExceptionPage();
             }
             app.UseOcelot().Wait();
-            //app.UseMvc();
         }
     }
 }

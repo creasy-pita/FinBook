@@ -1,7 +1,27 @@
+2018-7-13
+	调试ProjectCreateCommand ProjectController: CreateProject
+		汇总
+			ProjectRepository 的注入
+				可以使用  简单的  services.AddScope<IProjectRepository, ProjectRepository>();
+				或者   services.AddScope<IProjectRepository, ProjectRepository>( sp => {return new ProjectRepository(services.GetRequiredService(ProjectContext)) ;}); 	
+	调试 ProjectQueries
+				
+08:31:35	SELECT projects.Id ,projects.Company ,projects.Avatar ,projects.ProvinceId ,projects.FinStage ,projects.FinMoney ,projects.Valution ,projects.FinPercentage ,projects.Introduction ,projects.UserId ,projects.Income ,projects.Revenue ,projects.UserName ,projects.BrokerageOption ,projectvisiblerules.Tags ,projectvisiblerules.Visible FROM  projects INNER JOIN projectvisiblerulesprojects  ON projects.Id = projectvisiblerules.ProjectId WHERE projects.id =1 and projects.UserId = 1 LIMIT 0, 1000	Error Code: 1146. Table 'finbook_beta_project.projectvisiblerulesprojects' doesn't exist	0.000 sec
+				
+				
+2018-7-12
+	调试Command
+		传入简单的project 属性 Instruction，company信息， 调试CreateProjectCommand  
+		ViewProject
+		JoinProject 时 增加如果为自己的项目则 提示不能加入/查看自己的项目
+
+	获取推荐列表， 加领域集成事件 （未做）
+
 2018-7-11
-	添加项目推荐服务调用
+	添加项目推荐服务调用 
 		创建 RecommendService IRecommendService
 		注入RecommendService
+		RecommendService 虚拟实现
 	添加 ProjectQueries 及 webcontroller 调用
 			创建类
 			实现类
@@ -13,6 +33,9 @@
 	
 	IRecommendService
 	
+	
+	注册网关 服务发现注册 添加认证服务 
+		网关注册中 allowedscope:["project_api"] : 表示携带token 的scope 中需要带有 project_api 
 
 
 2018-7-10
