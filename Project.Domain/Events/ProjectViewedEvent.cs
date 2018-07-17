@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Project.Domain.Events
 {
-    class ProjectViewedEvent : INotification
+    public class ProjectViewedEvent : INotification
     {
         public ProjectViewer Viewer { get; set; }
     }

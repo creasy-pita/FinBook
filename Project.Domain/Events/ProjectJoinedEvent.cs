@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Project.Domain.Events
 {
-    class ProjectJoinedEvent : INotification
+    public class ProjectJoinedEvent : INotification
     {
         public ProjectContributor Contributor { get; set; }
     }

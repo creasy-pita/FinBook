@@ -1,4 +1,66 @@
 2018-7-13
+
+	
+
+	项目推荐服务实现  
+			此项目简单实现 不会像 Project分 Project.API Project.Domain Project.Infrastructure 
+			
+		需求
+			创建项目时发送集成事件，通过DotNetCore.CAP.RabbitMQ 发送集成事件
+			推荐服务中加入 根据创建项目的projectid 及project userid 去查找 一度好友列表，并提前创建推荐信息。
+				好友用户进入机会 标签时会看到推荐信息
+		总体分三步
+			接收其他领域服务发送的 IntegrationEvent 并实现，
+				需要同步实现Project服务中的ProjectCreatedEventHandler 并使用 DotNetCore.CAP.RabbitMQ 发送 IntegrationEvent
+			recommend EFcore 实现
+				包括model
+				引入 mysql.data.entityframeworkcore
+				RecommendContext
+				数据库 代码段迁移到 mysql端
+			编写RecommendAPI  controller, 通过UserIdentity中的UserId 获取 推荐列表
+		
+	
+		创建model层
+			创建ProjectRecommend
+		创建 data层
+			ProjectRecommendContext
+			ProjectRecommend
+		创建 controller
+		
+		创建IntegrationEventHandler  
+			接收其他领域服务发送的IntegrationEvent  并处理
+			需要加入 DotNetCore.CAP.RabbitMQ
+		创建IntegrationEvent 
+		
+		Service
+			IUserService，UserService  推荐服务接收到项目创建事件后 会根据项目创建人userId 使用UserAPI获取好友列表  这样用户进入推荐项目页面时 就能获取的推荐项目列表；
+			
+				需要Consul DNS 获取UserAPI的地址 来调用
+				需要加入 ConsulClient ,但是推荐服务不会注册到Consul让其他服务访问。 与其他服务的通信都是通过 发布订阅 及EventBus来实现
+		
+		
+		
+		
+
+	创建EventHandler
+	实现EventHandler
+	
+
+		Command
+			CreateProjectCommand:IRequest
+		CommanHandler
+			CreateProjectCommandHandler:IRequestHandler
+		Event	(DomainEvent)
+			ProjectCreatedEvent :INotification
+		EventHandler (DomainEventHandler)
+			ProjectCreatedEventHandler:INotificationHa
+		DomainIntegrateEvent
+		
+		DomainIntegrateEventHandler
+
+
+
+
 	调试ProjectCreateCommand ProjectController: CreateProject
 		汇总
 			ProjectRepository 的注入
