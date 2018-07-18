@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Project.Domain.AggregatesModel;
 using Dapper;
 using MySql.Data;
-using MySql.Data.MySqlClient;
+//using MySql.Data.MySqlClient;
 
 namespace Project.API.Application.Queries
 {

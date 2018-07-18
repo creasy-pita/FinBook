@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Project.Domain.Events
+namespace Project.Application.IntergrationEvents
 {
-    public class ProjectViewedEvent : INotification
+    public class ProjectViewedIntergrationEvent
     {
         public string Company { get; set; }
         public string Introduction { get; set; }

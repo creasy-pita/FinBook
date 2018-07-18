@@ -1,3 +1,16 @@
+2018-7-18
+				包括Rcommend model层
+				引入 DotNetCore.CAP.RabbitMQ
+					先部署RabbitMQ 服务端（可延后，客户端先实现 等调试时再加入）
+错误汇总
+	DotNetCore.CAP.RabbitMQ  没有 
+			            services.AddCap(options =>
+                options.UseEntityFramework<ProjectContext>()
+                    
+                );
+	解决：
+		使用DotNetCore.CAP.Mysql
+
 2018-7-13
 
 	
@@ -11,9 +24,11 @@
 				好友用户进入机会 标签时会看到推荐信息
 		总体分三步
 			接收其他领域服务发送的 IntegrationEvent 并实现，
-				需要同步实现Project服务中的ProjectCreatedEventHandler 并使用 DotNetCore.CAP.RabbitMQ 发送 IntegrationEvent
+				需要同步实现Project服务中的 ProjectViewedDomainEventHandler 并使用 DotNetCore.CAP.RabbitMQ 发送 IntegrationEvent
 			recommend EFcore 实现
-				包括model
+				包括Rcommend model层
+				引入 DotNetCore.CAP.RabbitMQ
+					先部署RabbitMQ 服务端
 				引入 mysql.data.entityframeworkcore
 				RecommendContext
 				数据库 代码段迁移到 mysql端
@@ -53,7 +68,7 @@
 		Event	(DomainEvent)
 			ProjectCreatedEvent :INotification
 		EventHandler (DomainEventHandler)
-			ProjectCreatedEventHandler:INotificationHa
+			ProjectViewedDomainEventHandler:INotificationHa
 		DomainIntegrateEvent
 		
 		DomainIntegrateEventHandler

@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Project.Domain.Events
+namespace Project.Application.IntergrationEvents
 {
-    public class ProjectViewedEvent : INotification
+    public class ProjectJoinedIntergrationEvent
     {
         public string Company { get; set; }
         public string Introduction { get; set; }
-        public string Avatar { get; set; }
+        //public string Avatar { get; set; }
 
-        public ProjectViewer Viewer { get; set; }
+        public ProjectContributor Contributor { get; set; }
     }
 }

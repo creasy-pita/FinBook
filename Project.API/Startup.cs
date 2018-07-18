@@ -88,12 +88,32 @@ namespace Project.API
                     );
                 }
             );
-
+            #region
             services.AddScoped<IRecommendService, RecommendService>()
                 .AddScoped<IProjectQueries, ProjectQueries>(sp =>
-                 { return new ProjectQueries(Configuration.GetConnectionString("DefaultConnection")); }
+                { return new ProjectQueries(Configuration.GetConnectionString("DefaultConnection")); }
                 );
             services.AddScoped<IProjectRepository, ProjectRepository>();
+            #endregion
+
+            #region
+            services.AddCap(options =>
+            {
+                options.UseEntityFramework<ProjectContext>()
+                    .UseRabbitMQ("hostname")
+                    .UseDashboard();
+                options.UseDiscovery(d=>
+                {
+                    d.DiscoveryServerHostName = "localhost";
+                    d.DiscoveryServerPort = 8500;
+                    d.CurrentNodeHostName = "localhost";
+                    d.CurrentNodePort = 4313;
+                    d.NodeId = 11;
+                    d.NodeName = "CAP ProjectAPI Node";
+                });
+            });
+            #endregion
+
             //AddMediatR 其实是在 Microsoft.Extension.DependencyInjection.MediatR中，但是是对 IServiceCollection services的扩展，所以需要引入 Microsoft.Extension.DependencyInjection.MediatR
             services.AddMediatR();
             services.AddMvc();
@@ -144,6 +164,7 @@ namespace Project.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCap();
             //app.UseAuthentication();
             app.UseMvc();
         }

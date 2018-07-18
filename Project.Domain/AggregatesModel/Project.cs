@@ -221,6 +221,7 @@ namespace Project.Domain.AggregatesModel
         {
             this.Viewers = new List<ProjectViewer>();
             this.Contributors = new List<ProjectContributor>();
+            //注册事件 在  CreateProjectCommandHandler.handler 中_projectRepository.UnitOfWork.SaveEntitiesAsync() 完成事件 Publish
             this.AddDomainEvent(new ProjectCreatedEvent { Project = this });
         }
 
@@ -234,7 +235,15 @@ namespace Project.Domain.AggregatesModel
             };
             if (!Viewers.Any(v => v.UserId == userId))
             {
-                this.AddDomainEvent(new ProjectViewedEvent { Viewer = viewer });
+                this.AddDomainEvent(new ProjectViewedEvent {
+                    Viewer = viewer
+                        ,
+                    Company = this.Company
+                        ,
+                    Introduction = this.Introduction
+                        ,
+                    Avatar = this.Avatar
+                });
                 Viewers.Add(viewer);
             }
         }
@@ -243,7 +252,12 @@ namespace Project.Domain.AggregatesModel
         {
             if (!Contributors.Any(v => v.Id == contributor.Id))
             {
-                this.AddDomainEvent(new ProjectJoinedEvent { Contributor = contributor });
+                this.AddDomainEvent(new ProjectJoinedEvent {
+                        Contributor = contributor
+                        ,Company = this.Company
+                        ,Introduction = this.Introduction
+                        ,Avatar = this.Avatar
+                });
                 Contributors.Add(contributor);
             }
         }
