@@ -24,7 +24,7 @@ namespace Recommend.API.IntegrationEventHandler
 
         public async Task CreateRecommendFromProject(ProjectCreatedIntergrationEvent @event)
         {
-            //获取fromuser 信息
+            //获取fromuser 信息 使用consul 服务发现 找到User 服务地址，获取用户基本信息
             var fromUser = await _userService.GetBaseUserInfoAsync(@event.UserId);
 
             //通过 Event传入项目的用户id,及项目其他基本信息  
@@ -41,9 +41,8 @@ namespace Recommend.API.IntegrationEventHandler
                 RecommednType = EnumRecommendType.Friend
             };
 
-            //使用  consul 服务发现 找到User 服务地址，获取用户基本信息
-
             //使用通讯录查找所有好友，给这些好友添加 推荐记录
+
 
             //return Task.CompletedTask;
         }

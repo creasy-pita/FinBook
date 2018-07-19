@@ -8,6 +8,8 @@
 		通过 Event传入项目的用户id,及项目其他基本信息  
 		使用  consul 服务发现 找到User 服务地址，获取用户基本信息
 		使用通讯录查找所有好友，给这些好友添加 推荐记录
+			通讯录api服务 注册到consul
+			
 错误：
 		迁移数据库时报错：The 'MySQLNumberTypeMapping' does not support value conversions. Support for value conversions typically requires changes in the database provider.
 		原因：mysql ef 相关的包对 enum 类型字段的转化问题

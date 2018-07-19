@@ -107,6 +107,7 @@ namespace Recommend.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
             app.UseCap();
             app.UseMvc();
         }

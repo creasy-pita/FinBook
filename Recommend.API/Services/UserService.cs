@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Recommend.API.Dto;
 using Newtonsoft.Json;
 
-namespace Recommend.Services
+namespace Recommend.API.Services
 {
     public class UserServcie: IUserService
     {
@@ -32,7 +32,7 @@ namespace Recommend.Services
         {
             try
             {
-                var result = await _dns.ResolveServiceAsync("service.consul", _options.Value.ServiceName);
+                var result = await _dns.ResolveServiceAsync("service.consul", _options.Value.UserServiceName);
 
                 var addressList = result.First().AddressList;
                 var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName.TrimEnd('.');

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Recommend.API.Services
 {
-    public interface IUserService
+    public interface IContactService
     {
-        Task<UserIdentity> GetBaseUserInfoAsync(int userId);
+        Task<List<Contact>> GetContactsByUserId(int userId);
     }
 }
