@@ -1,23 +1,36 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="IntegrationEventHandler\" />
-    <Folder Include="IntegrationEvent\" />
-    <Folder Include="Services\" />
-    <Folder Include="Model\" />
+    <Compile Remove="IntegrationEvents\ProjectJoinedIntergrationEvent.cs" />
+    <Compile Remove="IntegrationEvents\ProjectViewedIntergrationEvent.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DnsClient" Version="1.1.1" />
+    <PackageReference Include="DotNetCore.CAP.MySql" Version="2.2.4" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.11" />
+    <!-- <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.1" /> -->
+   
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Resilience.Http\Resilience.Http.csproj" />
   </ItemGroup>
 
 </Project>

@@ -20,7 +20,15 @@ namespace Project.API.Application.DomainEventHandlers
 
         public Task Handle(ProjectCreatedEvent notification, CancellationToken cancellationToken)
         {
-                var @event = new ProjectCreatedIntergrationEvent { CreateTime = DateTime.Now, ProjectId = notification.Project.Id, UserId = notification.Project.UserId};
+                var @event = new ProjectCreatedIntergrationEvent {
+                    CreateTime = DateTime.Now,
+                    Company = notification.Project.Company,
+                    FinStage = notification.Project.FinStage,
+                    Introduction = notification.Project.Introduction,
+                    ProjectAvatar = notification.Project.Avatar,
+                    Tags = notification.Project.Tags,
+                    ProjectId = notification.Project.Id,
+                    UserId = notification.Project.UserId};
                 _capPublisher.Publish("finbook.projectapi.projectcreated", @event);
                 return Task.CompletedTask;
         }

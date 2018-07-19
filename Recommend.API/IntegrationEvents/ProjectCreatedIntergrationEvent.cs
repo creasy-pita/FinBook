@@ -1,9 +1,7 @@
-﻿using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ProjectEntity =  Project.Domain.AggregatesModel.Project;
-namespace Project.Application.IntergrationEvents
+namespace Recommend.API.IntegrationEvents
 {
     public class ProjectCreatedIntergrationEvent
     {

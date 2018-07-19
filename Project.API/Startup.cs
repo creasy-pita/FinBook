@@ -100,7 +100,7 @@ namespace Project.API
             services.AddCap(options =>
             {
                 options.UseEntityFramework<ProjectContext>()
-                    .UseRabbitMQ("hostname")
+                    .UseRabbitMQ("hostname")//TBD
                     .UseDashboard();
                 options.UseDiscovery(d=>
                 {

@@ -1,3 +1,22 @@
+2018-7-19
+
+项目推荐服务实现 的部分开发
+	推荐服务api 开发
+		创建 Recommend  EF ，数据库
+	IntegrationEventHandlers handler 实现
+		获取fromuser 信息
+		通过 Event传入项目的用户id,及项目其他基本信息  
+		使用  consul 服务发现 找到User 服务地址，获取用户基本信息
+		使用通讯录查找所有好友，给这些好友添加 推荐记录
+错误：
+		迁移数据库时报错：The 'MySQLNumberTypeMapping' does not support value conversions. Support for value conversions typically requires changes in the database provider.
+		原因：mysql ef 相关的包对 enum 类型字段的转化问题
+		解决
+			还没有找到解决方法， 可以从版本问题入手
+			或者 升级  net core 2.0 为netcore 2.1  
+			或者 先删除DotNetCore.CAP包，等迁移后在引入 可能原因： DotNetCore.CAP对 依赖包与 mysql ef 相关的包及其依赖的包 的配合问题
+			或者 Microsoft.EntityFrameworkCore.Relational 2.1.1 修改为 Microsoft.EntityFrameworkCore.Relational 2.0.1
+
 2018-7-18
 				包括Rcommend model层
 				引入 DotNetCore.CAP.RabbitMQ
@@ -23,10 +42,18 @@
 			推荐服务中加入 根据创建项目的projectid 及project userid 去查找 一度好友列表，并提前创建推荐信息。
 				好友用户进入机会 标签时会看到推荐信息
 		总体分三步
-			接收其他领域服务发送的 IntegrationEvent 并实现，
+			接收其他领域服务发送的 IntegrationEvent 并使用Cap 接收并处理
+				创建 IntegrationEvents 文件夹， 用于定义 外部相关集成事件 比如 ProjectCreatedIntegrationEvent
+				创建 IntegrationEventHandlers 处理集成事件，如 ProjectCreatedIntegrationEventHandler
+				实现 ProjectCreatedEventHandler 来处理 ProjectCreatedIntegrationEvent
 				需要同步实现Project服务中的 ProjectViewedDomainEventHandler 并使用 DotNetCore.CAP.RabbitMQ 发送 IntegrationEvent
-			recommend EFcore 实现
-				包括Rcommend model层
+			recommend EFcore 实现 通过ef Context 插入数据库
+				
+				创建 Data  文件夹
+					创建 RecommendDbContext
+				创建Model
+					
+					
 				引入 DotNetCore.CAP.RabbitMQ
 					先部署RabbitMQ 服务端
 				引入 mysql.data.entityframeworkcore
@@ -154,7 +181,7 @@ mysql
 
 错误：
 	The Entity Framework Core Package Manager Console Tools don't support PowerShell version 2.0
-	
+	解决： 升级PowerShell
 	
 	问题：
 		The 'MySQLNumberTypeMapping' does not support value conversions. Support for value conversions typically requires changes in the database provider.
