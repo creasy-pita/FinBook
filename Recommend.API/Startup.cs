@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Recommend.API.Data;
 using Recommend.Infrastructure;
-using Recommend.Services;
+using Recommend.API.Services;
 
 namespace Recommend.API
 {

@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using User.API.Data;
 using User.API.Data.POCO;
+using User.API.Filters;
 
 namespace User.API
 {
@@ -44,11 +45,11 @@ namespace User.API
                     cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
                 }
             }));
-
-
             services.AddDbContext<AppUserDbContext>(options =>
     options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddMvc();            
+            services.AddMvc(options=>
+                options.Filters.Add(typeof(GlobalExceptionFilter))
+                );            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

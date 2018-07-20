@@ -10,12 +10,17 @@ namespace User.API.Model
         /// <summary>
         /// 用户id
         /// </summary>
-        public int AppUserId { get; set; }
+        public int UserId { get; set; }
 
         /// <summary>
-        /// 公司
+        /// 标签
         /// </summary>
         public string Tag { get; set; }
+
+        /// <summary>
+        /// 标签
+        /// </summary>
+        public DateTime CreateTime { get; set; }
 
     }
 }

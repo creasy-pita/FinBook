@@ -10,7 +10,8 @@ namespace User.API.Data
 {
     public class AppUserDbContext : DbContext
     {
-        public DbSet<AppUser> User { get; set; }
+        public DbSet<AppUser> Users { get; set; }
+        public DbSet<UserTag> UserTags { get; set; }
 
         public AppUserDbContext(DbContextOptions<AppUserDbContext> options) : base(options)
         {
@@ -33,7 +34,7 @@ namespace User.API.Data
             modelBuilder.Entity<UserTag>().Property(u => u.Tag).HasMaxLength(100);
             modelBuilder.Entity<UserTag>()
                 .ToTable("UserTags")
-                .HasKey(u => new { u.AppUserId, u.Tag});
+                .HasKey(u => new { u.UserId, u.Tag});
 
             modelBuilder.Entity<BPFile>()
                 .ToTable("UserBPFiles")

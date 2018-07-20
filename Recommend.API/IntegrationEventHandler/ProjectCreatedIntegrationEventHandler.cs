@@ -1,7 +1,7 @@
 ﻿using Recommend.API.Data;
 using Recommend.API.IntegrationEvents;
 using Recommend.API.Model;
-using Recommend.Services;
+using Recommend.API.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
