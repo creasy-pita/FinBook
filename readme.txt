@@ -1,4 +1,6 @@
 2018-7-21
+
+
 通讯录服务
 	目录结构创建
 	类创建
@@ -6,7 +8,12 @@
 	service
 		userservice 实现
 			使用consul 服务发现调用用户api 获取用户基本信息
-	
+	repository dbContext 采用mongo实现
+		mongo 
+			镜像安装
+			客户端安装
+			dbContext mongo的连接字符串， 组件引入 
+		
 
 未完成任务
 	任务68： FluentAPI写UserController测试用例（上）

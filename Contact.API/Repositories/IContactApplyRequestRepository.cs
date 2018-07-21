@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Contact.API.Repositories
@@ -13,19 +14,19 @@ namespace Contact.API.Repositories
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task<bool> AddRequestAsync(ContactApplyRequest request);
+        Task<bool> AddRequestAsync(ContactApplyRequest request, CancellationToken cancellationToken);
 
         /// <summary>
         /// 通过好友申请请求
         /// </summary>
         /// <param name="applierId"></param>
         /// <returns></returns>
-        Task<bool> ApprovalAsync(int applierId);
+        Task<bool> ApprovalAsync(int applierId, CancellationToken cancellationToken);
 
         /// <summary>
         /// 获取好友申请请求列表
         /// </summary>
         /// <returns></returns>
-        Task<bool> GetRequestListAsync(int userId);
+        Task<List<ContactApplyRequest>> GetRequestListAsync(int userId, CancellationToken cancellationToken);
     }
 }
