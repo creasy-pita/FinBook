@@ -47,7 +47,7 @@ namespace User.API.Controllers
         /// 获取当前用户信息
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         [Route("")]
         public async Task<IActionResult> Get()
         {

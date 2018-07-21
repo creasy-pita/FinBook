@@ -14,11 +14,11 @@ namespace User.API.Data
         public DbSet<AppUser> Users { get; set; }
         public DbSet<UserTag> UserTags { get; set; }
 
-        private ILogger<AppUserDbContext> _logger;
+       // private ILogger<AppUserDbContext> _logger;
 
-        public AppUserDbContext(DbContextOptions<AppUserDbContext> options, ILogger<AppUserDbContext> logger) : base(options)
+        public AppUserDbContext(DbContextOptions<AppUserDbContext> options) : base(options)
         {
-            _logger = logger;
+            //_logger = logger;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

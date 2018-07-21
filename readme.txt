@@ -1,5 +1,24 @@
+2018-7-21
+未完成任务
+	任务68： FluentAPI写UserController测试用例（上）
+	14:51 
+	任务69： FluentAPI写UserController测试用例（下）
+	17:56 
+	任务70： GitLab CI完整部署UserAPI到线上测试环境-上
+	22:18 
+	任务71： GitLab CI完整部署UserAPI到线上测试环境-中
+	22:06 
+	任务72： GitLab CI完整部署UserAPI到线上测试环境-下
+	24:16 
+	任务73： GitLab CI完整部署UserAPI到线上测试环境-Debug
+
 2018-7-20
 TBD  mysql 数据库访问连接 使用root用户可以， 不使用时 会报错问题解决
+
+省厅数据量大 ，
+取待报送的数据 
+select 
+
 
 任务64： 全局异常处理与日志记录
 	自定义用户异常类
