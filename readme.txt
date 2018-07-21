@@ -1,4 +1,13 @@
 2018-7-21
+通讯录服务
+	目录结构创建
+	类创建
+		model,data,repository,service,dto,ContactController
+	service
+		userservice 实现
+			使用consul 服务发现调用用户api 获取用户基本信息
+	
+
 未完成任务
 	任务68： FluentAPI写UserController测试用例（上）
 	14:51 

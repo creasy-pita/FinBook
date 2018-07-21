@@ -7,10 +7,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Recommend.API.Dto;
 using Newtonsoft.Json;
+using Contact.API.Dto;
 
-namespace Recommend.API.Services
+namespace Contact.API.Services
 {
     public class UserServcie: IUserService
     {
@@ -35,20 +35,16 @@ namespace Recommend.API.Services
             userServiceUrl = $"http://{address}:{port}/";
         }
 
-        public async Task<UserIdentity> GetBaseUserInfoAsync(int userId)
+        public async Task<BaseUserInfo> GetBaseUserInfoAsync(int userId)
         {
             try
             {
                 var response = await _httpClient.GetStringAsync(userServiceUrl + "api/user/baseinfo/"+userId);
                 if (!string.IsNullOrEmpty(response))
                 {
-                    var userInfo = JsonConvert.DeserializeObject<UserIdentity>(response);
+                    var userInfo = JsonConvert.DeserializeObject<BaseUserInfo>(response);
                     _logger.LogTrace($"Completed GetBaseUserInfoAsync with userId :{userId}");
                     return userInfo;
-                }
-                else
-                {
-                    return null;
                 }
             }
             catch (Exception ex)

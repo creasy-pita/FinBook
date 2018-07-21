@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using User.API.Data;
+using User.API.Dto;
 using User.API.Model;
 
 namespace User.API.Controllers
@@ -52,7 +53,7 @@ namespace User.API.Controllers
         public async Task<IActionResult> Get()
         {
             var user = _userContext.Users.AsTracking()
-                .Include(u => u.properties)
+                .Include(u => u.properties)//关联取出 UserProperty列表 
                 .SingleOrDefault(u => u.Id == UserIdentity.UserId);
             //（使用当前用户的id）获取当前用户，一般非用户界面的获取，而是其他代码的获取，不能获取到时 需要异常处理
             if (user == null)
@@ -61,6 +62,32 @@ namespace User.API.Controllers
                 throw new Exceptions.UserOperationException($"错误的用户上下文id{UserIdentity.UserId}");
             }
             return Json(user);
+        }
+
+        /// <summary>
+        /// 获取指定userId的用户信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("baseinfo/{id}")]
+        public async Task<IActionResult> GetBaseUserInfo(int userId)
+        {
+            var user = _userContext.Users.AsTracking()
+                .SingleOrDefault(u => u.Id == UserIdentity.UserId);
+            //（使用当前用户的id）获取当前用户，一般非用户界面的获取，而是其他代码的获取，不能获取到时 需要异常处理
+            if (user == null)
+            {
+                _logger.LogError($"GetBaseUserInfo 没有获取到id{UserIdentity.UserId}的信息");
+            }
+            UserIdentity userIdentity = new UserIdentity
+            {
+                Avatar = user.Avatar,
+                Company = user.Company,
+                Name = user.Name,
+                Title = user.Title,
+                UserId = user.Id
+            };
+            return Json(userIdentity);
         }
 
         [Route("")]

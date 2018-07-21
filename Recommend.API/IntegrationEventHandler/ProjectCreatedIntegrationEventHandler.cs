@@ -26,7 +26,10 @@ namespace Recommend.API.IntegrationEventHandler
         {
             //获取fromuser 信息 使用consul 服务发现 找到User 服务地址，获取用户基本信息
             var fromUser = await _userService.GetBaseUserInfoAsync(@event.UserId);
-
+            if (fromUser == null)
+            {
+                //TBD 记录没有获取到指定userId的用户信息
+            }
             //通过 Event传入项目的用户id,及项目其他基本信息  
             ProjectRecommend recommend = new ProjectRecommend {
                 Company = @event.Company,
