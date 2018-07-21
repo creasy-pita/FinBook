@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,11 @@ namespace User.API.Data
         public DbSet<AppUser> Users { get; set; }
         public DbSet<UserTag> UserTags { get; set; }
 
-        public AppUserDbContext(DbContextOptions<AppUserDbContext> options) : base(options)
-        {
+        private ILogger<AppUserDbContext> _logger;
 
+        public AppUserDbContext(DbContextOptions<AppUserDbContext> options, ILogger<AppUserDbContext> logger) : base(options)
+        {
+            _logger = logger;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

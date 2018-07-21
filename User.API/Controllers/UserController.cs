@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using User.API.Data;
+using User.API.Model;
 
 namespace User.API.Controllers
 {
@@ -61,15 +63,19 @@ namespace User.API.Controllers
             return Json(user);
         }
 
-        [HttpPatch]
         [Route("")]
-        public async Task<IActionResult> Patch()
+        [HttpPatch]
+        public async Task<IActionResult> Patch([FromBody]JsonPatchDocument<AppUser> appUserpatch )
         {
-            return Json(new
-            {
-                message = "",
-                user = await _userContext.Users.SingleOrDefaultAsync(u => u.Name == "creasypita")
-            });
+            //TBD handle users.Properties case
+            //TBD 记录 ef core sql日志   resource :https://docs.microsoft.com/en-us/ef/core/miscellaneous/logging
+
+            var user = await _userContext.Users
+                .SingleOrDefaultAsync(u => u.Id == UserIdentity.UserId);
+            appUserpatch.ApplyTo(user);
+
+             await _userContext.SaveChangesAsync();
+            return Json(user);
         }
 
         [HttpPost]
