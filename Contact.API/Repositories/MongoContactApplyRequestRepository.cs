@@ -35,8 +35,11 @@ namespace Contact.API.Repositories
         public async Task<bool> ApprovalAsync(int userId,int applierId, CancellationToken cancellationToken)
         {
             var filter = Builders<ContactApplyRequest>.Filter.Where(r => r.UserId == userId && r.ApplierId == applierId);
-            var update = Builders<ContactApplyRequest>.Update.Set(r => r.ApplyTime, DateTime.Now);
-            var options = new UpdateOptions { IsUpsert = true };
+            var update = Builders<ContactApplyRequest>.Update
+                .Set(r => r.ApplyTime, DateTime.Now)
+                .Set(r=> r.HandleTime,DateTime.Now)
+                .Set(r=> r.Approvaled,1);
+            //var options = new UpdateOptions { IsUpsert = true };
             var result = await _context.ContactApplyRequests.UpdateOneAsync(filter, update);
             return result.MatchedCount == result.ModifiedCount && result.ModifiedCount == 1;
         }

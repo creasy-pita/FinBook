@@ -10,6 +10,6 @@ namespace Contact.API.Repositories
     public interface IContactRepository
     {
         Task<bool> UpdateContactInfo(BaseUserInfo userInfo, CancellationToken cancellationToken);
-
+        Task<bool> AddContactAsync(int userId, BaseUserInfo contact, CancellationToken cancellationToken);
     }
 }

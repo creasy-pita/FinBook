@@ -18,6 +18,35 @@ namespace Contact.API.Repositories
         {
             _context = context;
         }
+
+        /// <summary>
+        /// 用户添加联系人
+        /// </summary>
+        /// <param name="userId">用户id</param>
+        /// <param name="contact">待添加的好友信息</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<bool> AddContactAsync(int userId,BaseUserInfo contact,CancellationToken cancellationToken)
+        {
+            //查看是否用户 有通讯录 contactbook
+            if ((await _context.ContactBooks.CountAsync(c => c.UserId == userId)) == 0)
+            {
+                await _context.ContactBooks.InsertOneAsync(new ContactBook { UserId = userId });
+            }
+            //ContactBook 加入一条好友信息
+            var filter = Builders<Models.ContactBook>.Filter.Eq(c => c.UserId ,contact.UserId);
+            var update = Builders<Models.ContactBook>.Update.AddToSet(c => c.Contacts, new Models.Contact
+            {
+                Avatar = contact.Avatar,
+                Company = contact.Company,
+                Name = contact.Name,
+                Title = contact.Title,
+                UserId = contact.UserId
+            });
+            var result = (await _context.ContactBooks.UpdateOneAsync(filter, update, null, cancellationToken));
+            return result.MatchedCount == result.ModifiedCount && result.ModifiedCount == 1;
+        }
+
         /// <summary>
         /// 通讯录好友信息更新， 则更新 所有用户的通讯录下有该好友的相应信息
         /// </summary>

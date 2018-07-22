@@ -1,4 +1,8 @@
 2018-7-22
+通讯录服务 用户通过好友申请 实现 完善 
+	//获取 当前上下文的用户  和申请人的  信息
+	//当前上下文的用户id 添加好友
+	//对方好友也要添加当前用户作为好友
 通讯录服务 用户好友申请 添加和 申请 通过实现 
 	mongo更新用户
 		使用linq表达是定义 where 条件
@@ -19,7 +23,15 @@
 							//contackbook 中的 contact.UserId==userInfo.UserId 
 						//定义 updatedefinition
 		
-
+关键
+	mongo 数据集合的查询方法
+	
+		FindAsync(r=>r.UserId = userInfo.UserId) 报错 
+		原因： 没有引入 Mongo.Driver空间
+		
+		组合 表的查询和更新方式
+		
+		CancellitionToken 用于 异步方法中 主动的终端未完成的异步方法
 
 2018-7-21
 
