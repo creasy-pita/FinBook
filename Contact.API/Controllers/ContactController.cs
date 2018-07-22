@@ -88,8 +88,8 @@ namespace Contact.API.Controllers
         /// </summary>
         /// <param name="applierId">申请人Id</param>
         /// <returns></returns>
-        [HttpPost]
-        [Route("approval-apply-request")]
+        [HttpPut]
+        [Route("apply-request")]
         public async Task<IActionResult> ApprovalApplyRequest(int applierId, CancellationToken cancellationToken)
         {
 

@@ -28,21 +28,25 @@ namespace User.API.Controllers
         // GET api/user/CheckOrCreate
         [Route("check-or-create")]
         [HttpPost]
-        public int CheckOrCreate(string phone)
+        public async Task<IActionResult> CheckOrCreate(string phone)
         {
-            //System.IO.Stream s = HttpContext.Request.;
-            //byte[] buffer = new byte[s.Length];
-            //s.Read(buffer, 0, buffer.Length);
-            //string sss = System.Text.Encoding.UTF8.GetString(buffer);
-
-            if (phone == "2")
+            var user =_userContext.Users.SingleOrDefault(u => u.Phone == phone);
+            if (user == null)
             {
-                return 1;
+                //加入
+                user = new AppUser { Phone = phone };
+                _userContext.Users.Add(user);
+                await _userContext.SaveChangesAsync();
             }
-            else
-            {
-                return 0;
-            }
+            return Ok(new { user.Id, user.Name, user.Company, user.Title, user.Avatar });
+            //if (phone == "2")
+            //{
+            //    return 1;
+            //}
+            //else
+            //{
+            //    return 0;
+            //}
         }
         /// <summary>
         /// 获取当前用户信息

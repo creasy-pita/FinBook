@@ -13,7 +13,7 @@
       "UpstreamHttpMethod": [ "Get", "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "finbook",
-        "AllowedScopes": ["user_api"]
+        "AllowedScopes": [ "user_api" ]
       }
     },
     {
@@ -26,11 +26,47 @@
         }
       ],
       "UpstreamPathTemplate": "/project",
-      "UpstreamHttpMethod": [ "Get","Post" ],
+      "UpstreamHttpMethod": [ "Get", "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "finbook",
-        "AllowedScopes": ["project_api"]
+        "AllowedScopes": [ "project_api" ]
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/contact",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 3064
+        }
+      ],
+      "UpstreamPathTemplate": "/contact",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/contact/tag",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 3064
+        }
+      ],
+      "UpstreamPathTemplate": "/contact/tag",
+      "UpstreamHttpMethod": [ "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/contact/apply-request",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 3064
+        }
+      ],
+      "UpstreamPathTemplate": "/contact/apply-request",
+      "UpstreamHttpMethod": [ "Get,Post,Put" ]
     },
     {
       "DownstreamPathTemplate": "/{everything}",

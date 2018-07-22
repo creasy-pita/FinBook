@@ -1,7 +1,22 @@
 2018-7-22
+
+用户api 和 用户认证 服务 
+	认证时 claims增加用户的基本信息
+TBD 
+	笔记本中
+		mongo 镜像安装和使用
+		mysql 各个数据库的准备检查
+		通讯录服务 contact api 调试
+
+通讯录服务 contact api 加入到ocelot 网关
+get: api/contacts
+put:api/contacts/tag
+get:api/contacts/apply-request
+post:api/contacts/apply-request
+put:api/contacts/apply-request
+
 通讯录服务 用户给好友打标签 用户获取好友列表
 	
-
 	重点
 		controller 层 使用viewmodel (通常是对界面上的输入组合来定义一个 viewmodel),dto(通常是后端临时对象，非领域层的对象定义)
 
@@ -44,6 +59,11 @@
 		
 		CancellitionToken 用于 异步方法中 主动的终端未完成的异步方法
 
+错误处理：
+	User.Identity nuget configuration is invalid.
+	restart the  visual studio
+
+		
 2018-7-21
 
 
