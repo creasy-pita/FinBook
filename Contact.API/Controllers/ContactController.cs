@@ -31,7 +31,7 @@ namespace Contact.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("")]//contacts
+        [Route("")]//contact
         public async Task<IActionResult> GetContacts(int userId)
         {
             var requests = await _contactRepository.GetContactsAsync(UserIdentity.UserId, new CancellationToken());
