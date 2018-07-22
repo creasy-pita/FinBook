@@ -74,7 +74,7 @@ namespace Contact.API.Controllers
         public async Task<IActionResult> ApprovalApplyRequest(int applierId)
         {
             //TBD also need parameter userId
-            var result = await _repository.ApprovalAsync(applierId, new CancellationToken());
+            var result = await _repository.ApprovalAsync(UserIdentity.UserId, applierId, new CancellationToken());
             if (!result)
             {
                 return BadRequest();

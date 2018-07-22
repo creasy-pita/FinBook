@@ -35,6 +35,11 @@ namespace Contact.API.Models
         /// </summary>
         public int Approvaled { get; set; }
         /// <summary>
+        /// 申请时间
+        /// </summary>
+        public DateTime ApplyTime { get; set; }
+
+        /// <summary>
         /// 处理时间
         /// </summary>
         public DateTime HandleTime { get; set; }

@@ -18,17 +18,27 @@ namespace Contact.API.Repositories
             _context = context;
         }
 
-        public Task<bool> AddRequestAsync(ContactApplyRequest request, CancellationToken cancellationToken)
+        public async Task<bool> AddRequestAsync(ContactApplyRequest request, CancellationToken cancellationToken)
         {
-            //_context.ContactApplyRequests.InsertOneAsync()
-            return Task.FromResult(true);
-            throw new NotImplementedException();
+            //声明是否重复的filterdefinition 和 updatedefinition
+            var filter = Builders<ContactApplyRequest>.Filter.Where( r => r.UserId == request.UserId && r.ApplierId == request.ApplierId);
+            if ((await _context.ContactApplyRequests.CountAsync(filter)) > 0)
+            {
+                var update = Builders<ContactApplyRequest>.Update.Set(r => r.ApplyTime, DateTime.Now);
+                var result = await _context.ContactApplyRequests.UpdateOneAsync(filter,update);
+                return result.MatchedCount == result.ModifiedCount && result.ModifiedCount == 1;
+            }
+            await _context.ContactApplyRequests.InsertOneAsync(request, null, cancellationToken);
+            return true;
         }
 
-        public Task<bool> ApprovalAsync(int applierId, CancellationToken cancellationToken)
+        public async Task<bool> ApprovalAsync(int userId,int applierId, CancellationToken cancellationToken)
         {
-            return Task.FromResult(true);
-            throw new NotImplementedException();
+            var filter = Builders<ContactApplyRequest>.Filter.Where(r => r.UserId == userId && r.ApplierId == applierId);
+            var update = Builders<ContactApplyRequest>.Update.Set(r => r.ApplyTime, DateTime.Now);
+            var options = new UpdateOptions { IsUpsert = true };
+            var result = await _context.ContactApplyRequests.UpdateOneAsync(filter, update);
+            return result.MatchedCount == result.ModifiedCount && result.ModifiedCount == 1;
         }
 
 
