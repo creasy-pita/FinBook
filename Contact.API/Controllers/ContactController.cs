@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Contact.API.Models;
 using Contact.API.Repositories;
@@ -28,7 +29,7 @@ namespace Contact.API.Controllers
         [Route("apply-request")]
         public async Task<IActionResult> GetApplyRequests(int userId)
         {
-            var requests = await _repository.GetRequestListAsync(UserIdentity.UserId);
+            var requests = await _repository.GetRequestListAsync(UserIdentity.UserId,new CancellationToken());
             return Json(requests);
         }
 
@@ -55,7 +56,7 @@ namespace Contact.API.Controllers
                 Title = baseUserInfo.Title,
                 CreateTime = DateTime.Now,
                 Avatar = baseUserInfo.Avatar//TBD 申请人和被申请人有可能搞乱
-            });
+            }, new CancellationToken());
             if (!result)
             {
                 return BadRequest();
@@ -73,7 +74,7 @@ namespace Contact.API.Controllers
         public async Task<IActionResult> ApprovalApplyRequest(int applierId)
         {
             //TBD also need parameter userId
-            var result = await _repository.ApprovalAsync(applierId);
+            var result = await _repository.ApprovalAsync(applierId, new CancellationToken());
             if (!result)
             {
                 return BadRequest();

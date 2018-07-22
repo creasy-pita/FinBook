@@ -20,11 +20,14 @@ namespace Contact.API.Repositories
 
         public Task<bool> AddRequestAsync(ContactApplyRequest request, CancellationToken cancellationToken)
         {
+            //_context.ContactApplyRequests.InsertOneAsync()
+            return Task.FromResult(true);
             throw new NotImplementedException();
         }
 
         public Task<bool> ApprovalAsync(int applierId, CancellationToken cancellationToken)
         {
+            return Task.FromResult(true);
             throw new NotImplementedException();
         }
 

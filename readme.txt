@@ -1,3 +1,19 @@
+2018-7-22
+
+mongodb 组合关系的表的更新
+场景：
+	用户id=3 更改信息 此用户有5个好友，则其好友对应通讯录中该用户的信息也同时更新
+步骤和实现
+                //查找该用户的通讯录，如果没有通讯录则说明没有好友直接返回true
+                //取出该用户的 所有联系人的id
+                //有通讯录，用mongodb的关联内部查询方式匹配
+                //定义 filterdifinition 用and 条件连接符
+					//所有联系人的contactBook 
+					//contackbook 中的 contact.UserId==userInfo.UserId 
+                //定义 updatedefinition
+		
+
+
 2018-7-21
 
 
