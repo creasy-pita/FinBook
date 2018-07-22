@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Contact.API.Models;
 using Contact.API.Repositories;
 using Contact.API.Services;
+using Contact.API.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Contact.API.Controllers
@@ -25,6 +26,20 @@ namespace Contact.API.Controllers
             _userService = userService;
             _contactRepository = contactRepository;
         }
+        /// <summary>
+        /// 获取好友申请列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("")]//contacts
+        public async Task<IActionResult> GetContacts(int userId)
+        {
+            var requests = await _contactRepository.GetContactsAsync(UserIdentity.UserId, new CancellationToken());
+            //TBD log  if is empty
+
+            return Json(requests);
+        }
+
         /// <summary>
         /// 获取好友申请列表
         /// </summary>
@@ -74,7 +89,7 @@ namespace Contact.API.Controllers
         /// <param name="applierId">申请人Id</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("apply-request")]
+        [Route("approval-apply-request")]
         public async Task<IActionResult> ApprovalApplyRequest(int applierId, CancellationToken cancellationToken)
         {
 
@@ -107,6 +122,23 @@ namespace Contact.API.Controllers
                 return BadRequest();
             }
             return Ok();
+        }
+
+        /// <summary>
+        /// 用户给好友打标签：给指定用户的 指定好友打标签
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("tag")]
+        public async Task<IActionResult> TagContact([FromBody]TagContactViewModel tagContactViewModel)
+        {
+            var result = await _contactRepository.TagsContactAsync(UserIdentity.UserId, tagContactViewModel.contactId, tagContactViewModel.Tags, new CancellationToken());
+            //TBD log  if is empty
+            if (result)
+            {
+                return Ok();
+            }
+            else { return BadRequest(); }
         }
     }
 }

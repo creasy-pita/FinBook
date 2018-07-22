@@ -47,6 +47,35 @@ namespace Contact.API.Repositories
             return result.MatchedCount == result.ModifiedCount && result.ModifiedCount == 1;
         }
 
+        public async Task<List<Models.Contact>> GetContactsAsync(int userId, CancellationToken cancellationToken)
+        {
+            var book = (await _context.ContactBooks.FindAsync(c => c.UserId == userId)).FirstOrDefault(cancellationToken);
+            if(book!=null)
+            {
+                return book.Contacts;
+            }
+            //TBD log
+            return new List<Models.Contact>();
+        }
+        /// <summary>
+        /// 用户给好友打标签
+        /// </summary>
+        /// <param name="userId">用户id</param>
+        /// <param name="contactId">好友id</param>
+        /// <param name="tags">标签列表</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<bool> TagsContactAsync(int userId, int contactId, List<string> tags, CancellationToken cancellationToken)
+        {
+            var filter = Builders<ContactBook>.Filter.And(
+                    Builders<ContactBook>.Filter.Eq(c => c.UserId, userId),
+                    Builders<ContactBook>.Filter.Eq("Contacts.$.UserId", contactId)
+                );
+            var update = Builders<ContactBook>.Update.Set("Contacts.$.Tags", tags);
+            var result = await _context.ContactBooks.UpdateOneAsync(filter, update, null, cancellationToken);
+            return result.MatchedCount == result.ModifiedCount && result.ModifiedCount == 1;
+        }
+
         /// <summary>
         /// 通讯录好友信息更新， 则更新 所有用户的通讯录下有该好友的相应信息
         /// </summary>

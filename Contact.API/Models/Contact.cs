@@ -5,6 +5,10 @@ namespace Contact.API.Models
 {
     public class Contact
     {
+        public Contact()
+        {
+            Tags = new List<string>();
+        }
         /// <summary>
         /// 用户id
         /// </summary>
@@ -26,5 +30,7 @@ namespace Contact.API.Models
         /// 职位
         /// </summary>
         public string Title { get; set; }
+
+        public List<string> Tags { get; set; }
     }
 }
