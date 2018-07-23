@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Contact.API.Infrastructure;
 using Contact.API.Repositories;
 using Contact.API.Services;
 using DnsClient;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +35,18 @@ namespace Contact.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+               {
+                   //options.Authority = "http://localhost:50255";
+                   options.Authority = "http://localhost";//发送到网关进行，再由网关进行转发到配置的认证服务器
+                   options.Audience = "contact_api";
+                   options.RequireHttpsMetadata = false;
+               });
+            #endregion
+
             #region  Consul and  Consul Service Disvovery
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
             //config the discoveryservice (consulservice ) host address
@@ -50,6 +64,7 @@ namespace Contact.API
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddSingleton<IDnsQuery>(p =>
             {
+                //TBD 可动态配置
                 return new LookupClient(IPAddress.Parse("127.0.0.1"), 8600);
             });
             #region polly register

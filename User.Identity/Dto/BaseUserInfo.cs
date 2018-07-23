@@ -7,7 +7,7 @@ namespace User.Identity.Dto
 {
     public class BaseUserInfo
     {
-        public int UserId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// 头像地址

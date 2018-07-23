@@ -49,7 +49,7 @@ namespace User.Identity.Authentication
                     new Claim("avatar", user.Avatar??string.Empty)
                 };
 
-                context.Result = new GrantValidationResult(user.UserId.ToString(), GrantType,claims);
+                context.Result = new GrantValidationResult(user.Id.ToString(), GrantType,claims);
                 return;
             }
             context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
