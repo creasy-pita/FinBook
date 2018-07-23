@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using BuildingBlocks.Resilience.Http;
 using DnsClient;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -54,6 +55,7 @@ namespace User.Identity
 
             services.AddScoped<IAuthCodeService, TestAuthCodeService>();
             services.AddScoped<IUserService, UserServcie>();
+            services.AddScoped<IProfileService, ProfileService>();
 
             if (Configuration.GetValue<string>("UseResilientHttp") == bool.TrueString)
             {

@@ -119,7 +119,7 @@ namespace Contact.API
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

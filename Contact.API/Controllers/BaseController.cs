@@ -19,7 +19,7 @@ namespace Contact.API.Controllers
                 //identity.Company = User.Claims.FirstOrDefault(c => c.Type == "company").Value ?? "";
                 //identity.Avatar = User.Claims.FirstOrDefault(c => c.Type == "avatar").Value ?? "";
                 //identity.Title = User.Claims.FirstOrDefault(c => c.Type == "title").Value ?? "";
-
+                string ss = User.Claims.FirstOrDefault(c => c.Type == "company").Value ?? "";
                 identity.UserId = 1;
                 //identity.Name = "jesse";
                 //identity.Company = "company";

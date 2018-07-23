@@ -38,7 +38,8 @@ namespace User.API.Controllers
                 _userContext.Users.Add(user);
                 await _userContext.SaveChangesAsync();
             }
-            return Ok(new { user.Id , user.Name, user.Company, user.Title, user.Avatar });
+            int userId = user.Id;
+            return Ok(new { userId, user.Name, user.Company, user.Title, user.Avatar });
             //if (phone == "2")
             //{
             //    return 1;

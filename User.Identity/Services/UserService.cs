@@ -50,10 +50,7 @@ namespace User.Identity.Services
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var result1 = await response.Content.ReadAsStringAsync();
-                    var obj = JsonConvert.DeserializeObject(result1);
-                    var obj1 = JsonConvert.DeserializeObject(result1) as BaseUserInfo;
-
-                    return JsonConvert.DeserializeObject(result1) as BaseUserInfo;
+                    return JsonConvert.DeserializeObject<BaseUserInfo>(result1) ;
                 }
             }
             catch (Exception ex)

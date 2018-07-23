@@ -1,4 +1,16 @@
 2018-7-23
+通讯录服务获取 认证服务回传的带用户信息的claims
+	方式
+	contact.api 
+	1 identity.api 的 config.cs 里面添加 API Resource 叫 Contact_API，并且加到client的 AllowedScope中
+	2 在 ocelot 的配置中添加一个 .wellknow 模糊匹配转发
+	3 配置 identity server 4 endpoints 模糊匹配转发
+	4 在contact api 中添加jwt authendication
+	5 在 basecontroller 中 从 clams 获取当前用户信息 profile claims
+	
+
+claims 加入 user 信息 
+	
 调试 通讯录服务的 get: api/contacts
 
 	consul 服务 发现 
