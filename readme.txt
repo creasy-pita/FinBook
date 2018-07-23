@@ -1,4 +1,18 @@
 2018-7-23
+写入用户相关信息的claims 的方式
+	ProfileService
+		var subjectId = subject.Claims.Where(x => x.Type == "sub").FirstOrDefault().Value;
+		if (!int.TryParse(subjectId, out int intUserId))
+		{
+			throw new ArgumentNullException(nameof(context.Subject));
+		}
+		context.IssuedClaims = context.Subject.Claims.ToList();
+	SmsAuthCodeValidator  
+		验证方法中 获取用户信息 写入
+		代码
+			context.Result = new GrantValidationResult(user.UserId.ToString(), GrantType,claims);
+
+
 通讯录服务获取 认证服务回传的带用户信息的claims
 	方式
 	contact.api 
@@ -6,6 +20,7 @@
 	2 在 ocelot 的配置中添加一个 .wellknow 模糊匹配转发
 	3 配置 identity server 4 endpoints 模糊匹配转发
 	4 在contact api 中添加jwt authendication
+		//AddAuthentication 则 identity 会帮我们装载 认证token中的claims 到 System.Security.Claims.ClaimsPrincipal User
 	5 在 basecontroller 中 从 clams 获取当前用户信息 profile claims
 	
 

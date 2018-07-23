@@ -37,6 +37,7 @@ namespace Contact.API
         {
             #region
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            //AddAuthentication 则 identity 会帮我们装载 认证token中的claims 到 System.Security.Claims.ClaimsPrincipal User
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                {

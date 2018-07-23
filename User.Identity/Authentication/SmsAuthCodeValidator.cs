@@ -48,7 +48,8 @@ namespace User.Identity.Authentication
                     new Claim("title", user.Title??string.Empty),
                     new Claim("avatar", user.Avatar??string.Empty)
                 };
-
+                //获取用户信息 放入 Claim[], 也可以 在 ProfileService中的验证方法中 获取用户信息 放入 Claim[]
+                //这里 已经获取了用户信息，所有直接就完成上述操作
                 context.Result = new GrantValidationResult(user.UserId.ToString(), GrantType,claims);
                 return;
             }
