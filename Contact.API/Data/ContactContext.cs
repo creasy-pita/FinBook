@@ -21,6 +21,7 @@ namespace Contact.API.Data
             var client = new MongoClient(_appSettings.MongoContactConnectionString);
             if(client != null)
             {
+                //it will actually creatr the database if it has not already been created
                 _database = client.GetDatabase(_appSettings.ContactDatabaseName);
             }
         }

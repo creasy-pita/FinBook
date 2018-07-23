@@ -1,10 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using BuildingBlocks.Resilience.Http;
+using Consul;
+using Contact.API.Data;
 using Contact.API.Dto;
+using Contact.API.Infrastructure;
+using Contact.API.Repositories;
+using Contact.API.Services;
+using DnsClient;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,7 +33,66 @@ namespace Contact.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region  Consul and  Consul Service Disvovery
+            services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
+            //config the discoveryservice (consulservice ) host address
+            services.AddSingleton<IConsulClient>(p => new ConsulClient(cfg =>
+            {
+                var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDisvoveryOptions>>().Value;
+
+                if (!string.IsNullOrEmpty(serviceConfiguration.Consul.HttpEndpoint))
+                {
+                    // if not configured, the client will use the default value "127.0.0.1:8500"
+                    cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
+                }
+            }));
+            #endregion
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.AddSingleton<IDnsQuery>(p =>
+            {
+                return new LookupClient(IPAddress.Parse("127.0.0.1"), 8600);
+            });
+            #region polly register
+            if (Configuration.GetValue<string>("UseResilientHttp") == bool.TrueString)
+            {
+                services.AddSingleton<IResilientHttpClientFactory, ResilientHttpClientFactory>(sp =>
+                {
+                    var logger = sp.GetRequiredService<ILogger<ResilientHttpClient>>();
+                    var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+
+                    var retryCount = 6;
+                    if (!string.IsNullOrEmpty(Configuration["HttpClientRetryCount"]))
+                    {
+                        retryCount = int.Parse(Configuration["HttpClientRetryCount"]);
+                    }
+
+                    var exceptionsAllowedBeforeBreaking = 5;
+                    if (!string.IsNullOrEmpty(Configuration["HttpClientExceptionsAllowedBeforeBreaking"]))
+                    {
+                        exceptionsAllowedBeforeBreaking = int.Parse(Configuration["HttpClientExceptionsAllowedBeforeBreaking"]);
+                    }
+
+                    return new ResilientHttpClientFactory(logger, httpContextAccessor, exceptionsAllowedBeforeBreaking, retryCount);
+                });
+                services.AddSingleton<IHttpClient, ResilientHttpClient>(sp => sp.GetService<IResilientHttpClientFactory>().CreateResilientHttpClient());
+            }
+            else
+            {
+                services.AddSingleton<IHttpClient, StandardHttpClient>();
+            }
+            #endregion
+
+            #region custom service injection
+            services.AddScoped<IUserService, UserServcie>();
+            services.AddScoped(typeof(ContactContext));
+                //.AddScoped<IProjectQueries, ProjectQueries>(sp =>
+                //{ return new ProjectQueries(Configuration.GetConnectionString("DefaultConnection")); }
+                //)
+                ;
+            services.AddScoped<IContactRepository, MongoContactRepository>();
+            services.AddScoped<IContactApplyRequestRepository, MongoContactApplyRequestRepository>();
+
+            #endregion
 
             services.AddMvc();
         }

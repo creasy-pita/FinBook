@@ -1,3 +1,40 @@
+2018-7-23
+调试 通讯录服务的 get: api/contacts
+
+	consul 服务 发现 
+		服务端注册
+	appsettings.json file
+		set the ServiceDiscovery node 
+			like follow:
+			  "ServiceDiscovery": {
+				"UserServiceName": "UserAPI", //会使用UserAPI,这里配置UserAPI在consul dns 中的名称UserAPI
+				"Consul": {
+				  "HttpEndpoint": "http://127.0.0.1:8500",
+				  "DnsEndpoint": {
+					"Address": "127.0.0.1",
+					"Port": 8600
+				  }
+				}			
+	startup
+		configservice
+		config the discoveryservice (consulservice ) host address
+	
+		injection IDnsQuery  when api call the other webapi service
+		客户端注册 即 api service 注册到 consul 中
+				var registration = new AgentServiceRegistration()
+                {
+                    Check = httpCheck,
+                    Address = address.Host,
+                    ID = serviceId,
+                    Name = serviceDisvoveryOptions.Value.ServiceName,
+                    Port = address.Port
+                };
+
+                consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
+				
+	错误记录：
+		注入相关服务
+		包括 IHttpClient ResilientHttpClient ResilientHttpClientFactory IDnsQuery AppSettings ServiceDisvoveryOptions IConsulClient
 2018-7-22
 
 用户api 和 用户认证 服务 
