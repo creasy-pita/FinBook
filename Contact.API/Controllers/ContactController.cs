@@ -32,9 +32,9 @@ namespace Contact.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("")]//contact
-        public async Task<IActionResult> GetContacts(int userId)
+        public async Task<IActionResult> GetContacts(int userId, CancellationToken cancellationToken)
         {
-            var requests = await _contactRepository.GetContactsAsync(UserIdentity.UserId, new CancellationToken());
+            var requests = await _contactRepository.GetContactsAsync(UserIdentity.UserId, cancellationToken);
             //TBD log  if is empty
 
             return Json(requests);
@@ -46,9 +46,9 @@ namespace Contact.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("apply-request")]
-        public async Task<IActionResult> GetApplyRequests(int userId)
+        public async Task<IActionResult> GetApplyRequests(int userId, CancellationToken cancellationToken)
         {
-            var requests = await _contactApplyRequestRepository.GetRequestListAsync(UserIdentity.UserId,new CancellationToken());
+            var requests = await _contactApplyRequestRepository.GetRequestListAsync(UserIdentity.UserId,cancellationToken);
             return Json(requests);
         }
 
@@ -58,10 +58,10 @@ namespace Contact.API.Controllers
         /// <param name="userId">被申请人id</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("apply-request")]
-        public async Task<IActionResult> AddApplyRequest(int userId)
+        [Route("apply-request/{userId}")]
+        public async Task<IActionResult> AddApplyRequest(int userId, CancellationToken cancellationToken)
         {
-            var baseUserInfo = await _userService.GetBaseUserInfoAsync(userId);
+            var baseUserInfo = await _userService.GetBaseUserInfoAsync(userId, cancellationToken);
             if (baseUserInfo == null)
             {
                 throw new Exception("用户参数错误");
@@ -94,8 +94,8 @@ namespace Contact.API.Controllers
         {
 
             //获取 当前上下文的用户  和申请人的  信息
-            var user = await _userService.GetBaseUserInfoAsync(UserIdentity.UserId);
-            var applier = await _userService.GetBaseUserInfoAsync(applierId);
+            var user = await _userService.GetBaseUserInfoAsync(UserIdentity.UserId,cancellationToken);
+            var applier = await _userService.GetBaseUserInfoAsync(applierId,cancellationToken);
             //当前上下文的用户id 添加好友
             await _contactRepository.AddContactAsync(user.UserId, new Dto.BaseUserInfo
             {

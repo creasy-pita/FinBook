@@ -38,16 +38,7 @@ namespace User.API.Controllers
                 _userContext.Users.Add(user);
                 await _userContext.SaveChangesAsync();
             }
-            int userId = user.Id;
-            return Ok(new { userId, user.Name, user.Company, user.Title, user.Avatar });
-            //if (phone == "2")
-            //{
-            //    return 1;
-            //}
-            //else
-            //{
-            //    return 0;
-            //}
+            return Ok(new { UserId = user.Id, user.Name, user.Company, user.Title, user.Avatar });
         }
         /// <summary>
         /// 获取当前用户信息
@@ -74,7 +65,7 @@ namespace User.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("baseinfo/{id}")]
+        [Route("baseinfo/{userId}")]
         public async Task<IActionResult> GetBaseUserInfo(int userId)
         {
             var user = await _userContext.Users.AsTracking()
@@ -99,7 +90,7 @@ namespace User.API.Controllers
         [HttpPatch]
         public async Task<IActionResult> Patch([FromBody]JsonPatchDocument<AppUser> appUserpatch )
         {
-            //TBD handle users.Properties case
+            //TBD handle users.Properties case  见 视屏任务 中 用户api 的相关小节
             //TBD 记录 ef core sql日志   resource :https://docs.microsoft.com/en-us/ef/core/miscellaneous/logging
 
             var user = await _userContext.Users

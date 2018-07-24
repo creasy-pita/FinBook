@@ -17,16 +17,17 @@ namespace User.API.Controllers
                 var identity = new UserIdentity();
                 //TBD
                 //identity.UserId = Convert.ToInt32(User.Claims.FirstOrDefault());
-                //identity.Name = User.Claims.FirstOrDefault(c => c.Type == "name").Value ?? "";
-                //identity.Company = User.Claims.FirstOrDefault(c => c.Type == "company").Value ?? "";
-                //identity.Avatar = User.Claims.FirstOrDefault(c => c.Type == "avatar").Value ?? "";
-                //identity.Title = User.Claims.FirstOrDefault(c => c.Type == "title").Value ?? "";
+                identity.UserId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == "sub").Value ?? "");
+                identity.Name = User.Claims.FirstOrDefault(c => c.Type == "name").Value ?? "";
+                identity.Company = User.Claims.FirstOrDefault(c => c.Type == "company").Value ?? "";
+                identity.Avatar = User.Claims.FirstOrDefault(c => c.Type == "avatar").Value ?? "";
+                identity.Title = User.Claims.FirstOrDefault(c => c.Type == "title").Value ?? "";
 
-                identity.UserId = 1;
-                identity.Name = "creasypita";
-                identity.Company = "company";
-                identity.Avatar = "avatar";
-                identity.Title = "title";
+                //identity.UserId = 1;
+                //identity.Name = "creasypita";
+                //identity.Company = "company";
+                //identity.Avatar = "avatar";
+                //identity.Title = "title";
                 return identity;
             }
 

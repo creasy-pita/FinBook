@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Consul;
 using DnsClient;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server.Features;
@@ -32,6 +34,18 @@ namespace User.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            //AddAuthentication 则 identity 会帮我们装载 认证token中的claims 到 System.Security.Claims.ClaimsPrincipal User
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = "http://localhost";//发送到网关进行，再由网关进行转发到配置的认证服务器
+                    options.Audience = "user_api";
+                    options.RequireHttpsMetadata = false;
+                });
+            #endregion
+
             services.AddOptions();
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
             //config the discoveryservice (consulservice ) host address
@@ -118,7 +132,7 @@ namespace User.API
                     consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
                 });
             }
-
+            app.UseAuthentication();
             app.UseMvc();
         }
 

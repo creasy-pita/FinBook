@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Contact.API.Dto;
+using System.Threading;
 
 namespace Contact.API.Services
 {
@@ -35,7 +36,7 @@ namespace Contact.API.Services
             userServiceUrl = $"http://{address}:{port}/";
         }
 
-        public async Task<BaseUserInfo> GetBaseUserInfoAsync(int userId)
+        public async Task<BaseUserInfo> GetBaseUserInfoAsync(int userId, CancellationToken cancellationToken)
         {
             try
             {

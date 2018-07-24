@@ -17,6 +17,22 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/user/baseinfo/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 56688
+        }
+      ],
+      "UpstreamPathTemplate": "/user/baseinfo/{userId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "finbook",
+        "AllowedScopes": [ "user_api" ]
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/project",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -42,7 +58,10 @@
         }
       ],
       "UpstreamPathTemplate": "/contact",
-      "UpstreamHttpMethod": [ "Get" ]
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AllowedScopes": [ "contact_api" ]
+      }
     },
     {
       "DownstreamPathTemplate": "/api/contact/tag",
@@ -54,10 +73,13 @@
         }
       ],
       "UpstreamPathTemplate": "/contact/tag",
-      "UpstreamHttpMethod": [ "Put" ]
+      "UpstreamHttpMethod": [ "Put" ],
+      "AuthenticationOptions": {
+        "AllowedScopes": [ "contact_api" ]
+      }
     },
     {
-      "DownstreamPathTemplate": "/api/contact/apply-request",
+      "DownstreamPathTemplate": "/api/contact/apply-request/{catchAll}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -65,8 +87,11 @@
           "Port": 2103
         }
       ],
-      "UpstreamPathTemplate": "/contact/apply-request",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ]
+      "UpstreamPathTemplate": "/contact/apply-request/{catchAll}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "AuthenticationOptions": {
+        "AllowedScopes": [ "contact_api" ]
+      }
     },
     {
       "DownstreamPathTemplate": "/connect/{catchAll}",

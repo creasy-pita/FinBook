@@ -1,5 +1,61 @@
+2018-7-24
+
+TBD 
+	BaseController User.Claims 获取时 注意 没有传相应 名称的 claims 情况 
+contactapi 完整运行
+	postman  
+		通过gateway 转发到各api形式访问
+		直接各api 形式访问
+	使用phone添加A,B用户， 
+	A用户 check-or-create 来获取 token ,不存在此用户时会创建
+	用户更新信息
+	A 查看好友列表，发现没有B
+	A 申请 添加B 为好友
+	B 获取好友申请列表
+	B 通过A的好友申请
+	A 好友列表 可查看到B
+
+错误记录：
+	访问user.api 获取用户基本信息 (http://localhost/user/baseinfo/1) 时 BaseController User.Claims 找不到用户的基本信息
+		可能原因：
+			访问 待用户信息的 token 没有传入
+			user.api 没有去获取
+				获取方式
+					引入认证中间件
+			获取方式问题
+				语句：
+					identity.UserId = Convert.ToInt32(User.Claims.FirstOrDefault());
+				应修改为：
+					identity.UserId = Convert.ToInt32(User.Claims.FirstOrDefault(c=>c.Type == "sub").Value?? "";
+		
+	
+	
+contactapi 调用 userservice 与 userapi 通信GetBaseUserInfo时 ，使用 传递服务名到consul dns 来获取
+	可以修改为 由ocelot 网关来转发
+		步骤 
+			userservice 调用userapi 的地址 使用注册在网关的地址
+			ocelot.json 配置中增加 转发路由
+			
+
+
+userapi  写入用户相关信息的claims 的方式
+	HttpPost 方式 controller  action 中的参数会获取Form中的对象
+	HttpGet 方式 controller  action 中的参数会获取url 中的参数，需要路由中配置参数名称
+		比如：
+			[Route("check-or-create")]
+			[HttpPost]
+			public async Task<IActionResult> CheckOrCreate(string phone)	
+		与
+			/// <summary>
+			/// 获取指定userId的用户信息
+			/// </summary>
+			/// <returns></returns>
+			[HttpGet]
+			[Route("baseinfo/{id}")]
+			public async Task<IActionResult> GetBaseUserInfo(int userId)
+
 2018-7-23
-写入用户相关信息的claims 的方式
+contact api 写入用户相关信息的claims 的方式
 	ProfileService
 		var subjectId = subject.Claims.Where(x => x.Type == "sub").FirstOrDefault().Value;
 		if (!int.TryParse(subjectId, out int intUserId))
