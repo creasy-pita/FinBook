@@ -1,4 +1,25 @@
+2018-7-25
+拓展
+	ocelot 网关 的路由 原理
+	mvc路由原理
+	相互的比较
+	
+通讯录中冗余了用户的信息，用户服务中用户信息更新时同时 通知通讯录服务更新相关用户信息
+	使用cap
+		eventbus 使用 rabbitmq
+			cap
+			cap.mysql
+			cap.rabbitmq
+			
+	rabbitmq 的安装 和使用
+		系统环境
+			可以本机
+			也可以 远程docker方式安装
+	
+
 2018-7-24
+
+
 
 TBD 
 	BaseController User.Claims 获取时 注意 没有传相应 名称的 claims 情况 
@@ -9,12 +30,14 @@ contactapi 完整运行
 	使用phone添加A,B用户， 
 	A用户 check-or-create 来获取 token ,不存在此用户时会创建
 	用户更新信息
-	A 查看好友列表，发现没有B
-	A 申请 添加B 为好友
-	B 获取好友申请列表
-	B 通过A的好友申请
-	A 好友列表 可查看到B
-
+	A 查看好友列表，发现没有B   api/Contact
+	A 申请 添加B 为好友 post:apply-request/{userId}   
+	B 获取好友申请列表  HttpGet :api/Contact/apply-request
+	B 通过A的好友申请   HttpPut :api/Contact/apply-request
+	A 好友列表 可查看到B 
+	A.phone 135555554444 B.phone 15924852562
+	
+		token 的值会在有加入认证框架的webapi中 自动放入header
 错误记录：
 	访问user.api 获取用户基本信息 (http://localhost/user/baseinfo/1) 时 BaseController User.Claims 找不到用户的基本信息
 		可能原因：
@@ -27,7 +50,25 @@ contactapi 完整运行
 					identity.UserId = Convert.ToInt32(User.Claims.FirstOrDefault());
 				应修改为：
 					identity.UserId = Convert.ToInt32(User.Claims.FirstOrDefault(c=>c.Type == "sub").Value?? "";
+	网关路由
+		http://localhost/user 与 http://localhost/user/ 的区别
+		/contact/apply-request/{catchAll} 与 /contact/apply-request 的区别
 		
+		
+	MultipartReaderStream	
+		IOException: Unexpected end of Stream, the content may have already been read by another component.	Microsoft.AspNetCore.WebUtilities.MultipartReaderStream+<ReadAsync>d__36.MoveNext()
+		
+		原因 
+			webapi 接口定义 如下：
+				[HttpPost]
+				[Route("apply-request/{userId}")]
+				public async Task<IActionResult> AddApplyRequest(int userId, CancellationToken cancellationToken)
+			需要从 userId 会从 url 中读取，而不是 form body中读取
+			另一边 postman 的post 形式时 form body中输入过key,value = userId,3
+			+ url 为http://localhost/contact/apply-request/3 时 
+		    aspnet 会认为多种方式传递userId值  所以报异常提醒
+		修改方式
+			去掉form body中的 key,value = userId,3
 	
 	
 contactapi 调用 userservice 与 userapi 通信GetBaseUserInfo时 ，使用 传递服务名到consul dns 来获取

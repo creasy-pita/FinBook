@@ -1,7 +1,7 @@
 {
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/api/user/{all}",
+      "DownstreamPathTemplate": "/api/user",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,8 +9,8 @@
           "Port": 56688
         }
       ],
-      "UpstreamPathTemplate": "/user/{all}",
-      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "UpstreamPathTemplate": "/user",
+      "UpstreamHttpMethod": [ "Get", "Patch" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "finbook",
         "AllowedScopes": [ "user_api" ]
@@ -89,6 +89,21 @@
       ],
       "UpstreamPathTemplate": "/contact/apply-request/{catchAll}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "AuthenticationOptions": {
+        "AllowedScopes": [ "contact_api" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/contact/apply-request",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 2103
+        }
+      ],
+      "UpstreamPathTemplate": "/contact/apply-request",
+      "UpstreamHttpMethod": [ "Get" ],
       "AuthenticationOptions": {
         "AllowedScopes": [ "contact_api" ]
       }

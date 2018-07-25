@@ -69,7 +69,7 @@ namespace User.API.Controllers
         public async Task<IActionResult> GetBaseUserInfo(int userId)
         {
             var user = await _userContext.Users.AsTracking()
-                .SingleOrDefaultAsync(u => u.Id == UserIdentity.UserId);
+                .SingleOrDefaultAsync(u => u.Id == userId);
             //（使用当前用户的id）获取当前用户，一般非用户界面的获取，而是其他代码的获取，不能获取到时 需要异常处理
             if (user == null)
             {

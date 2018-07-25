@@ -32,23 +32,24 @@ namespace Contact.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("")]//contact
-        public async Task<IActionResult> GetContacts(int userId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetContacts(CancellationToken cancellationToken)
         {
             var requests = await _contactRepository.GetContactsAsync(UserIdentity.UserId, cancellationToken);
             //TBD log  if is empty
 
             return Json(requests);
         }
-
+        #region   好友申请
         /// <summary>
         /// 获取好友申请列表
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [Route("apply-request")]
-        public async Task<IActionResult> GetApplyRequests(int userId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetApplyRequests()
         {
-            var requests = await _contactApplyRequestRepository.GetRequestListAsync(UserIdentity.UserId,cancellationToken);
+            CancellationToken cancellationToken = new CancellationToken();
+            var requests = await _contactApplyRequestRepository.GetRequestListAsync(UserIdentity.UserId, cancellationToken);
             return Json(requests);
         }
 
@@ -89,13 +90,13 @@ namespace Contact.API.Controllers
         /// <param name="applierId">申请人Id</param>
         /// <returns></returns>
         [HttpPut]
-        [Route("apply-request")]
+        [Route("apply-request/{applierId}")]
         public async Task<IActionResult> ApprovalApplyRequest(int applierId, CancellationToken cancellationToken)
         {
 
             //获取 当前上下文的用户  和申请人的  信息
-            var user = await _userService.GetBaseUserInfoAsync(UserIdentity.UserId,cancellationToken);
-            var applier = await _userService.GetBaseUserInfoAsync(applierId,cancellationToken);
+            var user = await _userService.GetBaseUserInfoAsync(UserIdentity.UserId, cancellationToken);
+            var applier = await _userService.GetBaseUserInfoAsync(applierId, cancellationToken);
             //当前上下文的用户id 添加好友
             await _contactRepository.AddContactAsync(user.UserId, new Dto.BaseUserInfo
             {
@@ -123,6 +124,8 @@ namespace Contact.API.Controllers
             }
             return Ok();
         }
+
+        #endregion
 
         /// <summary>
         /// 用户给好友打标签：给指定用户的 指定好友打标签

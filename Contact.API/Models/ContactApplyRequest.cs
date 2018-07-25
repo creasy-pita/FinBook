@@ -1,8 +1,10 @@
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 
 namespace Contact.API.Models
 {
+    [BsonIgnoreExtraElements]
     public class ContactApplyRequest
     {
         /// <summary>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Contact.API.Models;
 using Contact.API.Dto;
 using Microsoft.Extensions.Options;
+using System.IO;
 
 namespace Contact.API.Data
 {
@@ -24,6 +25,15 @@ namespace Contact.API.Data
                 //it will actually creatr the database if it has not already been created
                 _database = client.GetDatabase(_appSettings.ContactDatabaseName);
             }
+            //MongoDB.Driver.Core.Configuration.ClusterBuilder
+            //var settings1 = new MongoClientSettings
+            //{
+            //    ClusterConfigurator = cb =>
+            //    {
+            //        //var textWriter = TextWriter.Synchronized(new StreamWriter("mylogfile.txt"));
+            //        //cb.AddListener(new LogListener(textWriter));
+            //    }
+            //};
         }
 
         public void CheckAndCreate(string collectionName)

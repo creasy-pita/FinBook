@@ -34,7 +34,7 @@ namespace Contact.API.Repositories
                 await _context.ContactBooks.InsertOneAsync(new ContactBook { UserId = userId });
             }
             //ContactBook 加入一条好友信息
-            var filter = Builders<Models.ContactBook>.Filter.Eq(c => c.UserId ,contact.UserId);
+            var filter = Builders<Models.ContactBook>.Filter.Eq(c => c.UserId ,userId);
             var update = Builders<Models.ContactBook>.Update.AddToSet(c => c.Contacts, new Models.Contact
             {
                 Avatar = contact.Avatar,
@@ -69,9 +69,11 @@ namespace Contact.API.Repositories
         {
             var filter = Builders<ContactBook>.Filter.And(
                     Builders<ContactBook>.Filter.Eq(c => c.UserId, userId),
-                    Builders<ContactBook>.Filter.Eq("Contacts.$.UserId", contactId)
+                    Builders<ContactBook>.Filter.Eq("Contacts$UserId", contactId)
+                    //Builders<ContactBook>.Filter.Eq("Contacts.$.UserId", contactId)
                 );
-            var update = Builders<ContactBook>.Update.Set("Contacts.$.Tags", tags);
+            var update = Builders<ContactBook>.Update.Set("Contacts$Tags", tags);
+            //var update = Builders<ContactBook>.Update.Set("Contacts.$.Tags", tags);
             var result = await _context.ContactBooks.UpdateOneAsync(filter, update, null, cancellationToken);
             return result.MatchedCount == result.ModifiedCount && result.ModifiedCount == 1;
         }
