@@ -1,4 +1,88 @@
+2018-7-27
+1 cap ，mysql efcore 使用时  Microsoft.EntityFrameworkCore.Relational 2.1.0的问题
+	需要官方修复
+	先使用较早版本 Microsoft.EntityFrameworkCore.Relational 2.0.1
+
+推荐服务
+	未完成
+	
+	任务130： 推荐服务实现 - 访问联系人服务获取好友信息
+		使用通讯录查找所有好友，给这些好友添加 推荐记录
+	18:07 
+	任务131： 推荐服务实现 - 调试推荐服务
+	21:00 
+	任务132： 推荐服务实现 - 推荐服务加入网关	
+	
+
 2018-7-25
+
+挂起问题
+
+	按资料注册，rabbitmq 不能正常使用
+	CAP 不能正常使用
+		视频使用版本
+			cap 2.2.0
+			mysql.entityframeworkcore   6.10.6
+			rabbitmq 3.7.4
+			
+		
+		
+	待解决方式：
+		查看rabbitmq 是否有什么遗漏设置
+
+任务
+	服务间交互
+		中间件方案：
+			MediatR， RawRabbit，RabbitMQ，EventBusOnEshopOnContainers(是对 RabbitMQ 的封装)
+	RabbitMQ使用介绍
+		开启 management - ui
+			rabbitmq-plugins enable rabbitmq_management
+		start rabbitmq service
+			rabbitmq-service start
+	UserAPI 集成CAP
+	
+	UserAPI CAP 事件发送实现
+		创建 事件 UserProfileChangedEvent
+		使用 
+	ContactAPI集成CAP
+		cap 引入中间件 注册 RabbitMQ mysql地址等
+		创建mysql database finbook_beta_contact
+		创建 UserProfileChangedEvent, UserProfileChangedEventHandler:ICapSubscribe
+		
+	contactapi cap事件接收
+		
+错误：
+	1 http://localhost:50280/cap/published
+		ERR_CONNECTION_REFUSED
+	
+
+	2 没有自动创建 cap 相关表 ，需要看cap源码 create table部分
+		资料：https://github.com/dotnetcore/CAP/search?utf8=%E2%9C%93&q=create+table++mysql&type=
+	
+			DROP TABLE IF EXISTS `{prefix}.queue`;
+		CREATE TABLE IF NOT EXISTS `{prefix}.received` (
+		  `Id` int(127) NOT NULL AUTO_INCREMENT,
+		  `Name` varchar(400) NOT NULL,
+		  `Group` varchar(200) DEFAULT NULL,
+		  `Content` longtext,
+		  `Retries` int(11) DEFAULT NULL,
+		  `Added` datetime NOT NULL,
+		  `ExpiresAt` datetime DEFAULT NULL,
+		  `StatusName` varchar(50) NOT NULL,
+		  PRIMARY KEY (`Id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		CREATE TABLE IF NOT EXISTS `{prefix}.published` (
+		  `Id` int(127) NOT NULL AUTO_INCREMENT,
+		  `Name` varchar(200) NOT NULL,
+		  `Content` longtext,
+		  `Retries` int(11) DEFAULT NULL,
+		  `Added` datetime NOT NULL,
+		  `ExpiresAt` datetime DEFAULT NULL,
+		  `StatusName` varchar(40) NOT NULL,
+		  PRIMARY KEY (`Id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+	使用select * from `cap.published`查询
+
 拓展
 	ocelot 网关 的路由 原理
 	mvc路由原理

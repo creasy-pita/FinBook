@@ -3,6 +3,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="IntegrationEvents\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
@@ -17,5 +18,10 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\CAP-develop\src\DotNetCore.CAP.MySql\DotNetCore.CAP.MySql.csproj" />
+    <ProjectReference Include="..\..\..\src\CAP-develop\src\DotNetCore.CAP.RabbitMQ\DotNetCore.CAP.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\..\src\CAP-develop\src\DotNetCore.CAP\DotNetCore.CAP.csproj" />
   </ItemGroup>
 </Project>

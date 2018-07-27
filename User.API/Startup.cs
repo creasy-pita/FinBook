@@ -61,9 +61,30 @@ namespace User.API
             }));
             services.AddDbContext<AppUserDbContext>(options =>
     options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddMvc(options=>
+
+            services.AddMvc(options =>
                 options.Filters.Add(typeof(GlobalExceptionFilter))
-                );            
+            );
+            #region
+            services.AddCap(options =>
+            {
+                options
+                    .UseEntityFramework<AppUserDbContext>()
+                    .UseRabbitMQ("localhost");//TBD
+                options.UseDashboard();
+                options.UseDiscovery(d =>
+                {
+                    d.DiscoveryServerHostName = "localhost";
+                    d.DiscoveryServerPort = 8500;
+                    d.CurrentNodeHostName = "localhost";
+                    d.CurrentNodePort = 5600;
+                    d.NodeId = 11;
+                    d.NodeName = "CAP UserAPI Node";
+                });
+            });
+            #endregion
+
+         
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -132,6 +153,7 @@ namespace User.API
                     consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
                 });
             }
+            app.UseCap();
             app.UseAuthentication();
             app.UseMvc();
         }

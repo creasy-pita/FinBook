@@ -9,6 +9,7 @@ using Consul;
 using Contact.API.Data;
 using Contact.API.Dto;
 using Contact.API.Infrastructure;
+using Contact.API.IntegrationEvents;
 using Contact.API.Repositories;
 using Contact.API.Services;
 using DnsClient;
@@ -107,10 +108,29 @@ namespace Contact.API
                 ;
             services.AddScoped<IContactRepository, MongoContactRepository>();
             services.AddScoped<IContactApplyRequestRepository, MongoContactApplyRequestRepository>();
-
+            services.AddScoped<UserProfileChangedEventHandler>();
             #endregion
 
             services.AddMvc();
+            #region cap
+            services.AddCap(options =>
+            {
+                options
+                    //.UseMySql(op=> op.ConnectionString= "Server=192.168.11.83;Database=finbook_beta_contact;Uid=root;Pwd=root;Encrypt=true;SslMode=none")
+                    .UseMySql("Server=192.168.11.83;Database=finbook_beta_contact;Uid=root;Pwd=root;Encrypt=true;SslMode=none")
+                    .UseRabbitMQ("localhost");//TBD
+                //options.UseDashboard();
+                //options.UseDiscovery(d =>
+                //{
+                //    d.DiscoveryServerHostName = "localhost";
+                //    d.DiscoveryServerPort = 8500;
+                //    d.CurrentNodeHostName = "localhost";
+                //    d.CurrentNodePort = 5800;
+                //    d.NodeId = 12;
+                //    d.NodeName = "CAP ContactAPI Node";
+                //});
+            });
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -121,6 +141,7 @@ namespace Contact.API
                 app.UseDeveloperExceptionPage();
             }
             app.UseAuthentication();
+            app.UseCap();
             app.UseMvc();
         }
     }

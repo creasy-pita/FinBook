@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using User.API.Data;
 using User.API.Dto;
+using User.API.Events;
 using User.API.Model;
 
 namespace User.API.Controllers
@@ -18,11 +20,30 @@ namespace User.API.Controllers
     {
         private AppUserDbContext _userContext;
         private ILogger<UserController> _logger;
-
-        public UserController(AppUserDbContext userContext, ILogger<UserController> logger)
+        private readonly ICapPublisher _publisher;
+        public UserController(AppUserDbContext userContext, ILogger<UserController> logger, ICapPublisher publisher)
         {
             _userContext = userContext;
             _logger = logger;
+            _publisher = publisher;
+        }
+
+        private void RaiseUserprofileChangedEvent(Model.AppUser user)
+        {
+            if (_userContext.Entry(user).Property(nameof(user.Name)).IsModified ||
+                _userContext.Entry(user).Property(nameof(user.Avatar)).IsModified ||
+                _userContext.Entry(user).Property(nameof(user.Company)).IsModified ||
+                _userContext.Entry(user).Property(nameof(user.Title)).IsModified)
+            {
+                _publisher.Publish("finbook_userapi_userprofilechanged", new UserProfileChangedEvent {
+                    Name= user.Name,
+                    Avatar = user.Avatar,
+                    Company = user.Company,
+                    Title = user.Title,
+                    UserId = user.Id,
+
+                });
+            }
         }
 
         // GET api/user/CheckOrCreate
@@ -86,6 +107,7 @@ namespace User.API.Controllers
             return Json(userIdentity);
         }
 
+
         [Route("")]
         [HttpPatch]
         public async Task<IActionResult> Patch([FromBody]JsonPatchDocument<AppUser> appUserpatch )
@@ -97,7 +119,21 @@ namespace User.API.Controllers
                 .SingleOrDefaultAsync(u => u.Id == UserIdentity.UserId);
             appUserpatch.ApplyTo(user);
 
-             await _userContext.SaveChangesAsync();
+            using (var transaction = _userContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    RaiseUserprofileChangedEvent(user);
+                    await _userContext.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError($"更新用户信息失败：{ex.Message}");
+                    transaction.Rollback();
+                }
+            }
+
             return Json(user);
         }
 
