@@ -16,7 +16,9 @@ using DnsClient;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -134,12 +136,47 @@ namespace Contact.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(
+            IApplicationBuilder app,
+            IApplicationLifetime appLife,
+            ILoggerFactory loggerFactory,
+            IOptions<ServiceDisvoveryOptions> serviceDisvoveryOptions,
+            IConsulClient consul)
         {
-            if (env.IsDevelopment())
+
+            var features = app.Properties["server.Features"] as FeatureCollection;
+            var addresses = features.Get<IServerAddressesFeature>()
+                .Addresses
+                .Select(p => new Uri(p));
+
+            foreach (var address in addresses)
             {
-                app.UseDeveloperExceptionPage();
+                var serviceId = $"{serviceDisvoveryOptions.Value.ContactServiceName}_{address.Host}:{address.Port}";
+
+                var httpCheck = new AgentServiceCheck()
+                {
+                    DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(30),
+                    Interval = TimeSpan.FromSeconds(30),
+                    HTTP = new Uri(address, "HealthCheck").OriginalString
+                };
+
+                var registration = new AgentServiceRegistration()
+                {
+                    Check = httpCheck,
+                    Address = address.Host,
+                    ID = serviceId,
+                    Name = serviceDisvoveryOptions.Value.ContactServiceName,
+                    Port = address.Port
+                };
+
+                consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
+
+                appLife.ApplicationStopping.Register(() =>
+                {
+                    consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
+                });
             }
+
             app.UseAuthentication();
             app.UseCap();
             app.UseMvc();

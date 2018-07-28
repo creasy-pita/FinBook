@@ -7,5 +7,6 @@ namespace Recommend.API.Dto
 {
     public class Contact
     {
+        public int UserId { get; set; }
     }
 }

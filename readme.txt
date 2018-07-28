@@ -1,3 +1,127 @@
+
+2018年7月28日
+
+说明：
+	cap use discovery 中的 currentnodeport  要使用当前webapi 运行的端口
+recommend api  获取 通讯录服务的好友列表
+	contact api 注册到服务发现
+	通讯录添加 通过userId 获取好友列表的action   httpget 方式
+
+	recommend api 实现  获取 通讯录服务的好友列表 的 contactservice
+	ProjectCreatedIntegrationEventHandler 中 使用contactservice 完成 项目推荐发送给用户 的好友列表
+
+
+群里的小伙伴 jesse老师的 CAP部分，有没有完全跑通的， 可以分享一个 能完整运行的示例    
+我这边试了尝试了好几天  使用CAP 不能自动创建 cap.published cap.received 两张表， 发布消息时cap.published 会生成记录，但不能被订阅
+
+
+使用CAP的问题 求助
+问题简述
+	使用CAP 不能自动创建 cap.published cap.received 两张表， 发布消息时cap.published 会生成记录，但不能被订阅
+
+其他 
+	jesse 老师 能否 就cap这块 分享一个 能完整运行的示例
+软件环境
+	系统环境 
+		win7 64位
+	vs      
+		vs2017
+	cap版本
+		DotnetCore.CAP  2.2.0
+		DotnetCore.CAP.RabbitMQ  2.2.0
+		DotnetCore.CAP.MySql  2.2.0
+	rabbitmq 版本
+		rabbit-server 3.7.7   window
+		erlang 20.3  window
+	mysql EntityFrameworkCore
+		MySql.Data.EntityFrameworkCore 6.10.6
+	NetCore版本
+		netcore2.0
+	期待现象
+		程序启动完成后，访问 localhost: http://localhost:49349/api/publish 后
+			应该会自动创建 cap.published cap.received 两张表
+			cap.published 表会生成记录,过段时间后 状态会从 'Scheduled'变为其他状态
+			cap.received  表会生成记录
+	实际现象
+		没有自动创建 cap.published cap.received 两张表，而是自己手动创建
+		cap.published 表会生成记录,过段时间后 状态没有改变
+		cap.received  表没有生成记录
+	关键代码段
+
+		startup.cs
+			public void ConfigureServices(IServiceCollection services)
+			{
+				services.AddMvc();
+				services.AddOptions();
+				services.AddScoped<Service1>();
+				services.AddDbContext<MYDbContext>(options =>
+	options.UseMySQL("Server=localhost;Database=finbook_beta_user;Uid=root;Pwd=root;Encrypt=true"));
+				services.AddCap(options =>
+				{
+					options
+						.UseEntityFramework<MYDbContext>()
+						.UseRabbitMQ("localhost");
+				});
+
+			}
+
+			public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+			{
+				if (env.IsDevelopment())
+				{
+					app.UseDeveloperExceptionPage();
+				}
+				app.UseMvc();
+				app.UseCap();
+			}
+
+		发布者 publishcontroller.cs
+
+
+			[Route("api/[controller]")]
+			public class PublishController : Controller
+			{
+
+				private readonly ICapPublisher _publisher;
+				private MYDbContext _dbContext;
+				public PublishController(ICapPublisher publisher, MYDbContext dbContext)
+				{
+					_dbContext = dbContext;
+					_publisher = publisher;
+				}
+				// GET api/values
+				[HttpGet]
+				public  IActionResult Get()
+				{
+					using (var trans = _dbContext.Database.BeginTransaction())
+					{
+						_publisher.Publish("xxx.services.account.check", new Person { Name = "Foo", Age = 11 });
+						trans.Commit();
+					}
+					return Ok();
+				}
+			}
+
+		订阅者 Service1.cs
+				public class Service1: ICapSubscribe
+				{
+					[CapSubscribe("xxx.services.account.check")]
+					public void BarMessageProcessor(Person p)
+					{
+						string s = "ddd";
+					}
+				}
+
+
+
+
+
+
+
+会不会与 rabbitmq  运行的当前用户有关 ljq  而不是  system用户
+
+CREATE DATABASE IF NOT EXISTS finbook_beta_contact DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS finbook_beta_user DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 2018-7-27
 1 cap ，mysql efcore 使用时  Microsoft.EntityFrameworkCore.Relational 2.1.0的问题
 	需要官方修复
@@ -18,7 +142,7 @@
 
 挂起问题
 
-	按资料注册，rabbitmq 不能正常使用
+	按资料注册，rabbitmq 不能正常使用 
 	CAP 不能正常使用
 		视频使用版本
 			cap 2.2.0
@@ -35,10 +159,17 @@
 		中间件方案：
 			MediatR， RawRabbit，RabbitMQ，EventBusOnEshopOnContainers(是对 RabbitMQ 的封装)
 	RabbitMQ使用介绍
+		查看是否成功安装
+			rabbitmq-service
 		开启 management - ui
 			rabbitmq-plugins enable rabbitmq_management
+
+
 		start rabbitmq service
 			rabbitmq-service start
+		查看服务状态
+			rabbitmq-service status
+
 	UserAPI 集成CAP
 	
 	UserAPI CAP 事件发送实现

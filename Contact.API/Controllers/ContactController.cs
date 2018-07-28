@@ -39,6 +39,20 @@ namespace Contact.API.Controllers
 
             return Json(requests);
         }
+        /// <summary>
+        /// 获取好友申请列表   
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{userId}")]//contact
+        public async Task<IActionResult> GetContacts(int userId,CancellationToken cancellationToken)
+        {
+            var requests = await _contactRepository.GetContactsAsync(userId, cancellationToken);
+            //TBD log  if is empty
+
+            return Json(requests);
+        }
+
         #region   好友申请
         /// <summary>
         /// 获取好友申请列表

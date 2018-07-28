@@ -26,34 +26,33 @@ namespace Recommend.API.Services
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _httpClient = httpClient;
             _logger = logger;
+            var result = _dns.ResolveService("service.consul", _options.Value.ContactServiceName);
+            var addressList = result.First().AddressList;
+            var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName.TrimEnd('.');
+            var port = result.First().Port;
+            userServiceUrl = $"http://{address}:{port}/";
         }
 
         public async Task<List<Contact>> GetContactsByUserId(int userId)
         {
-            //try
-            //{
-            //    var result = await _dns.ResolveServiceAsync("service.consul", _options.Value.ContactServiceName);
-
-            //    var addressList = result.First().AddressList;
-            //    var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName.TrimEnd('.');
-            //    var port = result.First().Port;
-            //    userServiceUrl = $"http://{address}:{port}/";
-            //    //TBD contact api 待完成
-            //    var response = await _httpClient.GetStringAsync(userServiceUrl + "api/contact/" + userId);
-            //    if (!string.IsNullOrEmpty(response))
-            //    {
-            //        var userInfo = JsonConvert.DeserializeObject<UserIdentity>(response);
-            //        _logger.LogTrace($"Completed GetBaseUserInfoAsync with userId :{userId}");
-            //        return userInfo;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.LogError("GetBaseUserInfoAsync 在重试之后失败。。。。。" + ex.Message);
-            //    throw ex;
-            //}
-            //return null;
-            throw new NotImplementedException();
+            _logger.LogTrace($"Enter into GetContactsByUserId :{userId}");
+            try
+            {
+                //TBD contact api 待完成
+                var response = await _httpClient.GetStringAsync(userServiceUrl + "api/contact/" + userId);
+                if (!string.IsNullOrEmpty(response))
+                {
+                    var contacts = JsonConvert.DeserializeObject<List<Contact>>(response);
+                    _logger.LogTrace($"Completed GetContactsByUserId with userId :{userId}");
+                    return contacts;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("GetContactsByUserId 在重试之后失败。。。。。" + ex.Message);
+                throw ex;
+            }
+            return null;
         }
     }
 }
