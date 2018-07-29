@@ -15,9 +15,10 @@ recommend api  获取 通讯录服务的好友列表
 我这边试了尝试了好几天  使用CAP 不能自动创建 cap.published cap.received 两张表， 发布消息时cap.published 会生成记录，但不能被订阅
 
 
-使用CAP的问题 求助
+使用CAP的问题 问了群里的伙伴没有进展 想求助下老师 参考老师的视频部署的，好几天了跑不通
 问题简述
 	使用CAP 不能自动创建 cap.published cap.received 两张表， 发布消息时cap.published 会生成记录，但不能被订阅
+	听老师讲要架一个本地的 rabbitmq 环境
 
 其他 
 	jesse 老师 能否 就cap这块 分享一个 能完整运行的示例
