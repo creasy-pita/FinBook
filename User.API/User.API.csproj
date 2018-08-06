@@ -9,6 +9,9 @@
   <ItemGroup>
     <PackageReference Include="Consul" Version="0.7.2.4" />
     <PackageReference Include="DnsClient" Version="1.0.7" />
+    <PackageReference Include="DotNetCore.CAP" Version="2.2.0" />
+    <PackageReference Include="DotNetCore.CAP.MySql" Version="2.2.0" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
@@ -18,10 +21,5 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\CAP-develop\src\DotNetCore.CAP.MySql\DotNetCore.CAP.MySql.csproj" />
-    <ProjectReference Include="..\..\..\src\CAP-develop\src\DotNetCore.CAP.RabbitMQ\DotNetCore.CAP.RabbitMQ.csproj" />
-    <ProjectReference Include="..\..\..\src\CAP-develop\src\DotNetCore.CAP\DotNetCore.CAP.csproj" />
   </ItemGroup>
 </Project>

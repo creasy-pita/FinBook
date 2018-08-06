@@ -77,14 +77,12 @@ namespace User.API
                     d.DiscoveryServerHostName = "localhost";
                     d.DiscoveryServerPort = 8500;
                     d.CurrentNodeHostName = "localhost";
-                    d.CurrentNodePort = 5600;
+                    d.CurrentNodePort = 56688;
                     d.NodeId = 11;
                     d.NodeName = "CAP UserAPI Node";
                 });
             });
             #endregion
-
-         
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

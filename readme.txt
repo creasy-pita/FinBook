@@ -1,3 +1,86 @@
+2018-8-3
+TBD  	rabbitmq 消息处理的延时时间的设置，现在有大概5m的 delay
+
+2018-8-1
+	mongodb 
+	下载  window .msi  
+		下载地址
+	安装
+	环境变量设置
+		Path append   <install directory>\bin;
+	使用 mongo  cmd 命令创建 dbdata |log  directory
+		md "F:\dbdata\mongodb\data\db" "F:\dbdata\mongodb\log"
+	exe 方式打开 mongodb
+		"d:\Program Files\MongoDB\Server\4.0\bin\mongod.exe" --dbpath="F:\dbdata\mongodb\data\db"
+	window services 
+		Start MongoDB Community Edition as a Windows Service
+		Stop MongoDB Community Edition as a Windows Service
+		Remove MongoDB Community Edition as a Windows Service
+		方式启动，停止 和 从windows services 删除  m
+
+2018-7-30
+问题：
+	配置正确，但CAP ，rabbitmq 就是不work问题问题 
+	
+解决步骤
+	1 重装 erlang 和 rabbitmq 3.7.7
+	2 不打开 consul 服务发现
+		注：打开consul 服务也正常， 所以之前出现问题是  原因不会是端口冲突
+	3 先使用
+	Server=localhost;Database=finbook_metadata;Uid=root;Pwd=root;Encrypt=true;
+		表现：
+			程序控制台 输出报错误日志 InvalidOperationException: Value 'Prefered' not supported for option 'MySqlSslMode'.
+			打开 dashboard 时 提示 InvalidOperationException: Value 'Prefered' not supported for option 'MySqlSslMode'.		
+			cap.published ， received  表没有正常生成
+			cap.published 可以插入，但是 received 记录不能生成
+
+		说明：需要设置 SslMode ，暂时不设置， 修改为按4 操作
+	4 修改为Server=localhost;Database=finbook_metadata;Uid=root;Pwd=root;
+		表现：
+			cap.published 可以插入，过大概3-5分钟时间received可以显示记录
+			打开 dashboard 可以看到 publisher  subscriber received list 有信息
+			
+记录下 ：可以work 时的心情
+	信息爆n个棚,难以平复, 大货已解，心以无碍，犹如重生，瞭望世界，宇宙问题皆可克之
+	妳喜欢折腾的品质多少影响了我，让我consist on resolving this huge problem and finally work it out
+初步结论 
+	配置正确，但CAP ，rabbitmq 就是不work问题 判断为数据库连接字符串不同，连接方式不同，有些连接方式会出现错误导致
+	
+问题重现
+	方式1
+		1 Server=localhost;Database=finbook_metadata;Uid=root;Pwd=root;Encrypt=true
+		2 不开启 DashBord 和 ServerDictionary
+		3 启动web程序
+			现象： 没有创建表，程序控制台也没有报错，造成一种 是 明明配置正确，数据连接也没什么问题 ，CAP ，rabbitmq 就是不work
+		5 于是手动创建表，
+		6 使用注册的publisher 发布一个消息后， 
+			现象：可以发布消息，创建 published记录，但不能被接收和消费
+	方式2
+		1 Server=localhost;Database=finbook_metadata;Uid=root;Pwd=root;Encrypt=true
+		2 开启 DashBord 和 ServerDictionary
+		3 启动web程序
+			现象：
+				程序控制台 输出报错误日志 InvalidOperationException: Value 'Prefered' not supported for option 'MySqlSslMode'.
+				没有自动创建表
+		5 于是手动创建表
+		6 使用注册的publisher 发布一个消息后， 
+			说明：可以发布消息，创建 published记录，但不能被接收和消费
+	方式3
+		1 Server=localhost;Database=finbook_metadata;Uid=root;Pwd=root;
+		2 开启 DashBord 和 ServerDictionary
+		3 启动web程序
+			现象：
+				程序控制台 没有报错
+				cap.published ， received  表正常生成
+		4 使用注册的publisher 发布一个消息后， 
+			现象：
+				可以发布消息，创建 published记录，能正常接收和消费
+进一步结论
+	使用注册的publisher 发布一个消息 对数据库访问时，对连接方式要求宽松 可以使用：Server=localhost;Database=finbook_metadata;Uid=root;Pwd=root;Encrypt=true，
+	而使用Dashboard, Discovery 时，当中去检查、创建数据库表，使用数据库表时 要求的连接方式严格，要使用Server=localhost;Database=finbook_metadata;Uid=root;Pwd=root;才可以
+	
+	具体 要看官网有没有这方面的资料， 或查看源码去分析
+
 
 2018年7月28日
 
@@ -191,8 +274,8 @@ CREATE DATABASE IF NOT EXISTS finbook_beta_user DEFAULT CHARSET utf8 COLLATE utf
 	2 没有自动创建 cap 相关表 ，需要看cap源码 create table部分
 		资料：https://github.com/dotnetcore/CAP/search?utf8=%E2%9C%93&q=create+table++mysql&type=
 	
-			DROP TABLE IF EXISTS `{prefix}.queue`;
-		CREATE TABLE IF NOT EXISTS `{prefix}.received` (
+			DROP TABLE IF EXISTS `cap.queue`;
+		CREATE TABLE IF NOT EXISTS `cap.received` (
 		  `Id` int(127) NOT NULL AUTO_INCREMENT,
 		  `Name` varchar(400) NOT NULL,
 		  `Group` varchar(200) DEFAULT NULL,
@@ -203,7 +286,7 @@ CREATE DATABASE IF NOT EXISTS finbook_beta_user DEFAULT CHARSET utf8 COLLATE utf
 		  `StatusName` varchar(50) NOT NULL,
 		  PRIMARY KEY (`Id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-		CREATE TABLE IF NOT EXISTS `{prefix}.published` (
+		CREATE TABLE IF NOT EXISTS `cap.published` (
 		  `Id` int(127) NOT NULL AUTO_INCREMENT,
 		  `Name` varchar(200) NOT NULL,
 		  `Content` longtext,
@@ -212,7 +295,7 @@ CREATE DATABASE IF NOT EXISTS finbook_beta_user DEFAULT CHARSET utf8 COLLATE utf
 		  `ExpiresAt` datetime DEFAULT NULL,
 		  `StatusName` varchar(40) NOT NULL,
 		  PRIMARY KEY (`Id`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	使用select * from `cap.published`查询
 
 拓展

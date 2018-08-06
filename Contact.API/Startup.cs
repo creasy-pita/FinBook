@@ -119,18 +119,18 @@ namespace Contact.API
             {
                 options
                     //.UseMySql(op=> op.ConnectionString= "Server=192.168.11.83;Database=finbook_beta_contact;Uid=root;Pwd=root;Encrypt=true;SslMode=none")
-                    .UseMySql("Server=192.168.11.83;Database=finbook_beta_contact;Uid=root;Pwd=root;Encrypt=true;SslMode=none")
+                    .UseMySql("Server=localhost;Database=finbook_beta_contact;Uid=root;Pwd=root;")
                     .UseRabbitMQ("localhost");//TBD
-                //options.UseDashboard();
-                //options.UseDiscovery(d =>
-                //{
-                //    d.DiscoveryServerHostName = "localhost";
-                //    d.DiscoveryServerPort = 8500;
-                //    d.CurrentNodeHostName = "localhost";
-                //    d.CurrentNodePort = 5800;
-                //    d.NodeId = 12;
-                //    d.NodeName = "CAP ContactAPI Node";
-                //});
+                options.UseDashboard();
+                options.UseDiscovery(d =>
+                {
+                    d.DiscoveryServerHostName = "localhost";
+                    d.DiscoveryServerPort = 8500;
+                    d.CurrentNodeHostName = "localhost";
+                    d.CurrentNodePort = 2103;
+                    d.NodeId = 12;
+                    d.NodeName = "CAP ContactAPI Node";
+                });
             });
             #endregion
         }
