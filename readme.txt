@@ -518,7 +518,7 @@ put:api/contacts/apply-request
 		
 		组合 表的查询和更新方式
 		
-		CancellitionToken 用于 异步方法中 主动的终端未完成的异步方法
+		CancellitionToken 用于 异步方法中 主动的中断未完成的异步方法
 
 错误处理：
 	User.Identity nuget configuration is invalid.
