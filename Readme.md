@@ -32,6 +32,7 @@ chapter 5 通讯录服务
 chapter 6 项目|推荐 服务
 106-132
 	130-132 未完成   dapper queries 未完成
+	 129 ProjectCreatedIntegrationEventHandler 中没有加订阅 ICapSubscribe
 	
 
 
