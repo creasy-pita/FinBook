@@ -27,6 +27,7 @@ namespace TestEFMigration
         {
             services.AddDbContext<RecommendDbContext>(options =>
             {
+                //options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
                 options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"));
                     }
                 );

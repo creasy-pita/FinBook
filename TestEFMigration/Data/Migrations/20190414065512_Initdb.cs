@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace TestEFMigration.Migrations
+namespace TestEFMigration.Data.Migrations
 {
-    public partial class init : Migration
+    public partial class Initdb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,19 +13,19 @@ namespace TestEFMigration.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:AutoIncrement", true),
-                    Company = table.Column<string>(nullable: true),
-                    CreateTime = table.Column<DateTime>(nullable: false),
-                    FinStage = table.Column<string>(nullable: true),
-                    FromUserAvatar = table.Column<string>(nullable: true),
+                    UserId = table.Column<int>(nullable: false),
                     FromUserId = table.Column<int>(nullable: false),
                     FromUserName = table.Column<string>(nullable: true),
-                    Introduction = table.Column<string>(nullable: true),
-                    ProjectAvatar = table.Column<string>(nullable: true),
-                    ProjectId = table.Column<int>(nullable: false),
+                    FromUserAvatar = table.Column<string>(nullable: true),
                     RecommednType = table.Column<int>(nullable: false),
-                    RecommendTime = table.Column<DateTime>(nullable: false),
+                    ProjectId = table.Column<int>(nullable: false),
+                    ProjectAvatar = table.Column<string>(nullable: true),
+                    Company = table.Column<string>(nullable: true),
+                    Introduction = table.Column<string>(nullable: true),
                     Tags = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    FinStage = table.Column<string>(nullable: true),
+                    CreateTime = table.Column<DateTime>(nullable: false),
+                    RecommendTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

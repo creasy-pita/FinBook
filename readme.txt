@@ -1,3 +1,69 @@
+2019年4月14日
+
+dotnet ef migrations add Initdb --project Project.Infrastructure --startup-project Project.API -c ProjectContext -o Migrations
+dotnet ef database update --project Project.Infrastructure --startup-project Project.API -c ProjectContext
+	dotnet ef migrations add Initdb --project Project.API --startup-project Project.API -c ProjectContext -o Migrations
+	dotnet ef database update -c ProjectContext --project Project.API --startup-project Project.API 
+
+
+	mysql  efcore  code first  migrate
+	创建 AppUserDbContext, model
+	startup  中 services.AddDbContext<AppUserDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+	nuget 安装 mysql.data.entityframeworkcore\8.0.15
+	dotnet ef migrations add Initdb --project MysqlEFMigrate --startup-project MysqlEFMigrate -c AppUserDbContext -o Data/migrations
+	dotnet ef database update -c AppUserDbContext --project MysqlEFMigrate --startup-project MysqlEFMigrate
+	
+	参考示例见： git  https://github.com/creasy-pita/aspnetcoreDemo/tree/master/ef/MysqlEFMigrate
+	
+	说明： 
+		1 以上方法 ，不需要先常见数据库和 __EFMigrationsHistory 表 ，这些迁移时自动生成
+		2 --startup-project  指定 startup所在项目 --project 指定 dbcontext所在项目
+		3 有迁移提示 【 The 'MySQLNumberTypeMapping' does not support value conversions.】 问题   网上有说使用 pemo.efcore 的解决方式，但没有试验成功。 但以上的迁移方法方法确认可行
+		参考资料 https://stackoverflow.com/questions/50442930/microsoft-entityframeworkcore-2-1-rc-with-mysql-data-entityframeworkcore
+		
+	问题：TestEFMigration 项目的问题
+		System.InvalidOperationException: The current CSharpHelper cannot scaffold literals of type 'Microsoft.EntityFrameworkCore.Metadata.Internal.DirectConstructorBinding'. Configure your services to use one that can.
+	   at Microsoft.EntityFrameworkCore.Design.Internal.CSharpHelper.UnknownLiteral(Object value)
+	   at Microsoft.EntityFrameworkCore.Migrations.Design.CSharpSnapshotGenerator.GenerateAnnotation(IAnnotation annotation, IndentedStringBuilder stringBuilder)
+	   at Microsoft.EntityFrameworkCore.Migrations.Design.CSharpSnapshotGenerator.GenerateEntityTypeAnnotations(String builderName, IEntityType entityType, IndentedStringBuilder stringBuilder)
+	   at Microsoft.EntityFrameworkCore.Migrations.Design.CSharpSnapshotGenerator.GenerateEntityType(String builderName, IEntityType entityType, IndentedStringBuilder stringBuilder)
+	   at Microsoft.EntityFrameworkCore.Migrations.Design.CSharpSnapshotGenerator.GenerateEntityTypes(String builderName, IReadOnlyList`1 entityTypes, IndentedStringBuilder stringBuilder)
+	   at Microsoft.EntityFrameworkCore.Migrations.Design.CSharpSnapshotGenerator.Generate(String builderName, IModel model, IndentedStringBuilder stringBuilder)
+	   at Microsoft.EntityFrameworkCore.Migrations.Design.CSharpMigrationsGenerator.GenerateMetadata(String migrationNamespace, Type contextType, String migrationName, String migrationId, IModel targetModel)
+	   at Microsoft.EntityFrameworkCore.Migrations.Design.MigrationsScaffolder.ScaffoldMigration(String migrationName, String rootNamespace, String subNamespace)
+	   at Microsoft.EntityFrameworkCore.Design.Internal.MigrationsOperations.AddMigration(String name, String outputDir, String contextType)
+	   at Microsoft.EntityFrameworkCore.Design.OperationExecutor.AddMigrationImpl(String name, String outputDir, String contextType)
+	   at Microsoft.EntityFrameworkCore.Design.OperationExecutor.OperationBase.<>c__DisplayClass3_0`1.<Execute>b__0()
+	   at Microsoft.EntityFrameworkCore.Design.OperationExecutor.OperationBase.Execute(Action action)
+		The current CSharpHelper cannot scaffold literals of type 'Microsoft.EntityFrameworkCore.Metadata.Internal.DirectConstructorBinding'. Configure your services to use one that can.
+		解决：Microsoft.Aspnetcore.All  为 2.0.0 ， microsoft.entityframeworkcore.design 2.0.1	升级为 2.10
+		原因： 可能各包完成迁移时不匹配的版本产生配合的问题，不匹配版本在生成编译时时能通过的（类型，方法等定义上没有问题）
+		参考资料： https://stackoverflow.com/questions/50763221/migrations-error-cannot-scaffold-literals-of-type-directconstructorbinding
+	问题： TestEFMigration 项目的问题
+		System.ArgumentException: Option not supported.
+		Parameter name: encrypt
+		   at MySql.Data.MySqlClient.MySqlBaseConnectionStringBuilder.GetOption(String key)
+		   at MySql.Data.MySqlClient.MySqlConnectionStringBuilder.set_Item(String keyword, Object value)
+		   at System.Data.Common.DbConnectionStringBuilder.set_ConnectionString(String value)
+		   at MySql.Data.MySqlClient.MySqlBaseConnectionStringBuilder..ctor(String connStr, Boolean isXProtocol)
+		   at MySql.Data.MySqlClient.MySqlConnection.set_ConnectionString(String value)
+		   at MySql.Data.EntityFrameworkCore.MySQLServerConnection.CreateDbConnection()
+		   at Microsoft.EntityFrameworkCore.Internal.LazyRef`1.get_Value()
+		   at MySql.Data.EntityFrameworkCore.MySQLDatabaseCreator.Exists()
+		   at Microsoft.EntityFrameworkCore.Migrations.HistoryRepository.Exists()
+		   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.Migrate(String targetMigration)
+		   at Microsoft.EntityFrameworkCore.Design.Internal.MigrationsOperations.UpdateDatabase(String targetMigration, String contextType)
+		   at Microsoft.EntityFrameworkCore.Design.OperationExecutor.OperationBase.Execute(Action action)
+		Option not supported.
+		Parameter name: encrypt
+		原因：connectstring 中加入了 Encrypt=true，数据库可能需要开启某个安全项的设置才可以
+		解决： 去除 Encrypt=true
+	
+	问题 
+		Project.API   项目于 在 dotnet ef database update --project Project.API --startup-project Project.API -c ProjectContext
+Build failed.  提示	build fialed
+		原因： 生成项目于失败，需要先解决 项目生成失败的问题
+		
 2018-8-3
 TBD  	rabbitmq 消息处理的延时时间的设置，现在有大概5m的 delay
 test conflict1 
@@ -1030,11 +1096,12 @@ gateway.api 集成identity
 	5 startup 中注入服务 ， 加入中间件
 
 2018-5-21
-dbcontext 和 model 准备
+已过期 有最新方式迁移myssql efcore (使用 code first 方式)
+【【dbcontext 和 model 准备
     1 创建appuserdbcontext,appuser
         data/appuserdbcontext,model/appuser
 数据库准备
-    mysql 中创建finbook_metadata 数据库
+    mysql 中创建 finbook_metadata 数据库
     创建 finbook_test 用户 和授权
         CREATE USER 'finbook_test'@'%' IDENTIFIED BY 'root';
         GRANT ALL PRIVILEGES ON *.* TO 'finbook_test'@'%' WITH GRANT OPTION;
@@ -1044,7 +1111,9 @@ dbcontext 和 model 准备
 
 	创建首次迁移代码
 		dotnet ef migrations add Initdb -c AppUserDbContext -o Data/migrations
+		//dotnet ef migrations add Initdb --project TestEFMigration --startup-project TestEFMigration -c RecommendDbContext -o Data/Migrations
 		dotnet ef database update -c AppUserDbContext
+		//dotnet ef database update -c AppUserDbContext --project MysqlEFMigrate --startup-project MysqlEFMigrate
     finbook_metadata 库 初始 ef表
 CREATE TABLE `__EFMigrationsHistory` 
 		( 
@@ -1052,6 +1121,6 @@ CREATE TABLE `__EFMigrationsHistory`
 			`ProductVersion` nvarchar(32) NOT NULL, 
 			PRIMARY KEY (`MigrationId`) 
 		);
-    
+】】    
 
 

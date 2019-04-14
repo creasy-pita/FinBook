@@ -3,13 +3,13 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="Data\migrations\" />
     <Folder Include="IntegrationEvents\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Consul" Version="0.7.2.4" />
     <PackageReference Include="DnsClient" Version="1.0.7" />
-    <PackageReference Include="DotNetCore.CAP" Version="2.2.0" />
     <PackageReference Include="DotNetCore.CAP.MySql" Version="2.2.0" />
     <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="6.10.6" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.Mysql" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />

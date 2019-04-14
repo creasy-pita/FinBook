@@ -1,0 +1,2 @@
+﻿dotnet ef migrations add Initdb --project TestEFMigration --startup-project TestEFMigration -c RecommendDbContext -o Data/Migrations
+dotnet ef database update --project TestEFMigration --startup-project TestEFMigration -c RecommendDbContext

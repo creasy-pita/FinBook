@@ -33,9 +33,21 @@ chapter 6 项目|推荐 服务
 106-132
 	130-132 未完成   dapper queries 未完成
 	 129 ProjectCreatedIntegrationEventHandler 中没有加订阅 ICapSubscribe
-	
+	 
+	126
+		
 
 
 chapter 7 微服务监控与部署	
 133-
 		基本没看
+
+
+
+
+
+资料
+	项目用例图
+		https://www.processon.com/diagraming/58ed81a1e4b0c9097c3d7c5c
+	泳道图
+		https://www.processon.com/apps/596466a9e4b0c5e101f479c4

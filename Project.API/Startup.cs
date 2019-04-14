@@ -62,13 +62,13 @@ namespace Project.API
             //        options.RequireHttpsMetadata = false;
             //    });
 
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer( options =>
-            //    {
-            //        options.Authority = "http://localhost:50255";
-            //        options.Audience = "project_api";
-            //        options.RequireHttpsMetadata = false;
-            //    });
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+               {
+                   options.Authority = "http://localhost:50255";
+                   options.Audience = "project_api";
+                   options.RequireHttpsMetadata = false;
+               });
 
             //services.AddAuthentication("Bearer")
             //.AddIdentityServerAuthentication(options => {
@@ -81,10 +81,8 @@ namespace Project.API
             services.AddDbContext<ProjectContext>(options =>
                 {
                     options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")
-                    //, builder=>
-                    //builder.MigrationsAssembly(typeof(ProjectContext).Assembly.GetName().Name)
-                    ,b => b.MigrationsAssembly(typeof(Startup).Assembly.GetName().Name)
-                    
+                    , builder => builder.MigrationsAssembly(typeof(ProjectContext).Assembly.GetName().Name)
+                    //, b => b.MigrationsAssembly(typeof(Startup).Assembly.GetName().Name)
                     );
                 }
             );

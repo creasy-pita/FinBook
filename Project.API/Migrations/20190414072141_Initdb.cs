@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Project.API.Migrations
+namespace Project.Infrastructure.Migrations
 {
-    public partial class InitDb : Migration
+    public partial class Initdb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,33 +13,33 @@ namespace Project.API.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:AutoIncrement", true),
-                    AreaId = table.Column<string>(nullable: true),
-                    AreaName = table.Column<string>(nullable: true),
-                    Avatar = table.Column<string>(nullable: true),
-                    BrokerageOption = table.Column<string>(nullable: true),
-                    CityId = table.Column<string>(nullable: true),
-                    CityName = table.Column<string>(nullable: true),
-                    Company = table.Column<string>(nullable: true),
-                    CreateTime = table.Column<DateTime>(nullable: false),
-                    FinMoney = table.Column<string>(nullable: true),
-                    FinPercentage = table.Column<int>(nullable: false),
-                    FinStage = table.Column<int>(nullable: false),
-                    FormatBPFile = table.Column<string>(nullable: true),
-                    Income = table.Column<int>(nullable: false),
-                    Introduction = table.Column<string>(nullable: true),
-                    OriginBPFile = table.Column<string>(nullable: true),
-                    ProvinceId = table.Column<string>(nullable: true),
-                    ProvinceName = table.Column<string>(nullable: true),
-                    ReferenceId = table.Column<int>(nullable: false),
-                    RegisterTime = table.Column<DateTime>(nullable: false),
-                    Revenue = table.Column<int>(nullable: false),
-                    ShowSecurityInfo = table.Column<bool>(nullable: false),
-                    SourceId = table.Column<int>(nullable: false),
-                    Tags = table.Column<string>(nullable: true),
-                    UpdateTime = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     UserName = table.Column<string>(nullable: true),
-                    Valuation = table.Column<string>(nullable: true)
+                    Company = table.Column<string>(nullable: true),
+                    Introduction = table.Column<string>(nullable: true),
+                    Avatar = table.Column<string>(nullable: true),
+                    OriginBPFile = table.Column<string>(nullable: true),
+                    FormatBPFile = table.Column<string>(nullable: true),
+                    ShowSecurityInfo = table.Column<short>(nullable: false),
+                    ProvinceId = table.Column<string>(nullable: true),
+                    ProvinceName = table.Column<string>(nullable: true),
+                    CityId = table.Column<string>(nullable: true),
+                    CityName = table.Column<string>(nullable: true),
+                    AreaId = table.Column<string>(nullable: true),
+                    AreaName = table.Column<string>(nullable: true),
+                    RegisterTime = table.Column<DateTime>(nullable: false),
+                    FinPercentage = table.Column<int>(nullable: false),
+                    FinStage = table.Column<int>(nullable: false),
+                    FinMoney = table.Column<string>(nullable: true),
+                    Income = table.Column<int>(nullable: false),
+                    Revenue = table.Column<int>(nullable: false),
+                    Valuation = table.Column<string>(nullable: true),
+                    Tags = table.Column<string>(nullable: true),
+                    BrokerageOption = table.Column<string>(nullable: true),
+                    SourceId = table.Column<int>(nullable: false),
+                    ReferenceId = table.Column<int>(nullable: false),
+                    UpdateTime = table.Column<DateTime>(nullable: false),
+                    CreateTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,13 +52,13 @@ namespace Project.API.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:AutoIncrement", true),
-                    Avatar = table.Column<string>(nullable: true),
-                    ContributorType = table.Column<int>(nullable: false),
-                    CreateTime = table.Column<DateTime>(nullable: false),
-                    IsCloser = table.Column<bool>(nullable: false),
-                    ProjectId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    UserName = table.Column<string>(nullable: true)
+                    ProjectId = table.Column<int>(nullable: false),
+                    UserName = table.Column<string>(nullable: true),
+                    Avatar = table.Column<string>(nullable: true),
+                    IsCloser = table.Column<short>(nullable: false),
+                    CreateTime = table.Column<DateTime>(nullable: false),
+                    ContributorType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,10 +75,10 @@ namespace Project.API.Migrations
                 name: "ProjectProperties",
                 columns: table => new
                 {
-                    Key = table.Column<string>(maxLength: 100, nullable: false),
                     ProjectId = table.Column<int>(nullable: false),
-                    Value = table.Column<string>(maxLength: 100, nullable: false),
-                    Text = table.Column<string>(nullable: true)
+                    Key = table.Column<string>(maxLength: 100, nullable: false),
+                    Text = table.Column<string>(nullable: true),
+                    Value = table.Column<string>(maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -98,10 +97,10 @@ namespace Project.API.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:AutoIncrement", true),
-                    Avatar = table.Column<string>(nullable: true),
-                    ProjectId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    UserName = table.Column<string>(nullable: true)
+                    ProjectId = table.Column<int>(nullable: false),
+                    UserName = table.Column<string>(nullable: true),
+                    Avatar = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -121,8 +120,8 @@ namespace Project.API.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:AutoIncrement", true),
                     ProjectId = table.Column<int>(nullable: false),
-                    Tags = table.Column<string>(nullable: true),
-                    Visible = table.Column<bool>(nullable: false)
+                    Visible = table.Column<short>(nullable: false),
+                    Tags = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
