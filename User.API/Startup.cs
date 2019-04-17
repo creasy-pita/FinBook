@@ -40,6 +40,7 @@ namespace User.API
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
+                    //options.Authority = "http://localhost:50255";
                     options.Authority = "http://localhost";//发送到网关进行，再由网关进行转发到配置的认证服务器
                     options.Audience = "user_api";
                     options.RequireHttpsMetadata = false;

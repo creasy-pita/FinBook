@@ -1,3 +1,42 @@
+2019年4月16日
+	问题
+		Use.API 中的BaseController 中  User.Claims 没有值
+	具体描述：
+		PostMan中
+		通过 http://localhost:50255/connect/token 获取access_token 值
+		patch :http://localhost:{{host}}/api/user/ 时，把access_token 放入environments的{{token}}中
+		调用后台发现User.Claims
+	原因： environments 分类别维护，patch :http://localhost:{{host}}/api/user/ 的请求没有选中这个类别，所以就不能读取到这个类别下边的{{token}}参数  
+
+	eventbus CAP+ mysql + rabbitmq 的方式
+		nuget 包
+			dotnetcore.cap
+			dotnetcore.mysql .rabbitmq
+		安装rabbitmq
+
+	开源组件 CAP 资料 ：https://www.cnblogs.com/savorboard/p/cap.html
+
+	RabbitMQ 的docker 方式安装
+	1  docker 国内镜像 安装 
+		https://blog.csdn.net/LaySolitary/article/details/82623913
+		启动docker ： systemctl start docker
+	2 docker rabbitmq
+		//docker run -d --hostname my-rabbit --name some-rabbit -p 8080:15672 registry.docker-cn.com/rabbitmq:3-management
+		1 docker pull daocloud.io/library/rabbitmq:3.5.3-management
+		2 docker run -d -p 5672:5672 -p 15672:15672 --name rabbit -e RABBITMQ_DEFAULT_USER=kail  -e RABBITMQ_DEFAULT_PASS=1234 daocloud.io/library/rabbitmq:3.5.3-management
+		3 访问 http://192.168.161.132:15672
+		参考：https://www.cnblogs.com/yufeng218/p/9452621.html
+		https://www.kancloud.cn/kailbin/rabbitmq/471964
+		注：
+		1 官方镜像特别慢，
+			修改docker镜像地址
+				在docker pull 镜像时 加入registry.docker-cn.com
+				参考：https://www.docker-cn.com/registry-mirror
+				参考： https://www.kancloud.cn/kailbin/rabbitmq/471964	
+		2 Linux软件源慢   ：镜像修改，整体修改，而不是针对单个软件包的镜像地址修改方式
+		https://blog.csdn.net/QimaoRyan/article/details/78169223
+
+
 2019年4月14日
 
 dotnet ef migrations add Initdb --project Project.Infrastructure --startup-project Project.API -c ProjectContext -o Migrations
