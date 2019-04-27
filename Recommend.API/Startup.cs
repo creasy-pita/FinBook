@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using Recommend.API.Data;
 using Recommend.Infrastructure;
 using Recommend.API.Services;
+using Recommend.API.IntegrationEventHandler;
 
 namespace Recommend.API
 {
@@ -41,6 +42,9 @@ namespace Recommend.API
                 );
             }
 );
+            services.AddScoped<ProjectCreatedIntegrationEventHandler>();
+            services.AddScoped<IUserService, UserServcie>();
+            services.AddScoped<IContactService, ContactService>();
 
             #region consul 服务发现  和 polly 重试，熔断...
             services.AddSingleton<IDnsQuery>(p =>
@@ -48,7 +52,6 @@ namespace Recommend.API
                 return new LookupClient(IPAddress.Parse("127.0.0.1"), 8600);
             });
 
-            services.AddScoped<IUserService, UserServcie>();
 
             if (Configuration.GetValue<string>("UseResilientHttp") == bool.TrueString)
             {

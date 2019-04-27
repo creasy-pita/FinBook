@@ -1,4 +1,5 @@
-﻿using Recommend.API.Data;
+﻿using DotNetCore.CAP;
+using Recommend.API.Data;
 using Recommend.API.IntegrationEvents;
 using Recommend.API.Model;
 using Recommend.API.Services;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Recommend.API.IntegrationEventHandler
 {
-    public class ProjectCreatedIntegrationEventHandler//:ICapSubscribe
+    public class ProjectCreatedIntegrationEventHandler:ICapSubscribe
     {
         private RecommendDbContext _context;
         //private ICapSubscribe _capSubscribe;
@@ -23,7 +24,7 @@ namespace Recommend.API.IntegrationEventHandler
             _contactService = contactService;
             //_capSubscribe = capSubscribe;
         }
-
+        [CapSubscribe("finbook.projectapi.projectcreated")]
         public async Task CreateRecommendFromProject(ProjectCreatedIntergrationEvent @event)
         {
             //获取fromuser 信息 使用consul 服务发现 找到User 服务地址，获取用户基本信息
@@ -57,9 +58,6 @@ namespace Recommend.API.IntegrationEventHandler
                 _context.ProjectRecommends.Add(recommend);
             }
             _context.SaveChanges();
-
-
-
 
             //return Task.CompletedTask;
         }

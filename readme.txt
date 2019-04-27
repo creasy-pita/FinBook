@@ -1,3 +1,14 @@
+2019年4月27日
+	轨迹
+		1 推荐服务的编写 主要步骤如下
+			添加集成事件，集成事件处理类，主要完成接收project.api 中创建项目的事件，接收后再处理类中生产推荐列表
+			添加recommend ef, recommend dbcontext
+			recommend 访问用户服务获取用户信息
+			recommend 通过创建新项目的用户id访问 用户通讯录获取好友列表
+			编写 recommend controller 根据当前用户获取项目推荐列表
+			把 recommend api  加入网关
+			*（此步骤未完成）把 recommend api 加入 认证
+
 2019年4月16日
 	问题
 		Use.API 中的BaseController 中  User.Claims 没有值

@@ -109,6 +109,22 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/recommend",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 4338
+        }
+      ],
+      "UpstreamPathTemplate": "/recommend",
+      "UpstreamHttpMethod": [ "Get" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "finbook",
+        "AllowedScopes": [ "recommend_api" ]
+      }
+    },
+    {
       "DownstreamPathTemplate": "/connect/{catchAll}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
