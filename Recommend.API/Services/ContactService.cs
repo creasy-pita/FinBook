@@ -14,7 +14,7 @@ namespace Recommend.API.Services
 {
     public class ContactService : IContactService
     {
-        private string contactServiceUrl = "http://localhost:56688/";
+        private string contactServiceUrl = string.Empty;//"http://localhost:56688/";
         private IHttpClient _httpClient;
         private IDnsQuery _dns;
         private IOptions<ServiceDisvoveryOptions> _options;
@@ -27,6 +27,7 @@ namespace Recommend.API.Services
             _httpClient = httpClient;
             _logger = logger;
             var result = _dns.ResolveService("service.consul", _options.Value.ContactServiceName);
+            if (result.Length == 0) return ;
             var addressList = result.First().AddressList;
             var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName.TrimEnd('.');
             var port = result.First().Port;
@@ -38,6 +39,7 @@ namespace Recommend.API.Services
             _logger.LogTrace($"Enter into GetContactsByUserId :{userId}");
             try
             {
+                if (string.IsNullOrEmpty(contactServiceUrl)) return null;
                 //TBD contact api 待完成
                 var response = await _httpClient.GetStringAsync(contactServiceUrl + "api/contact/" + userId);
                 if (!string.IsNullOrEmpty(response))

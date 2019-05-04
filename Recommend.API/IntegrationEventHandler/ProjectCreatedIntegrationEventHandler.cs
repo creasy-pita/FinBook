@@ -59,7 +59,7 @@ namespace Recommend.API.IntegrationEventHandler
             }
             _context.SaveChanges();
 
-            //return Task.CompletedTask;
+            // Task.CompletedTask;
         }
     }
 }

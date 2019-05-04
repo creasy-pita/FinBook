@@ -14,7 +14,7 @@ namespace Recommend.API.Services
 {
     public class UserServcie: IUserService
     {
-        private string userServiceUrl = "http://localhost:56688/";
+        private string userServiceUrl = string.Empty;//"http://localhost:56688/";
         private IHttpClient _httpClient;
         private IDnsQuery _dns;
         private IOptions<ServiceDisvoveryOptions> _options;
@@ -28,7 +28,7 @@ namespace Recommend.API.Services
             _logger = logger;
 
             var result = _dns.ResolveService("service.consul", _options.Value.UserServiceName);
-
+            if (result.Length == 0) return ;
             var addressList = result.First().AddressList;
             var address = addressList.Any() ? addressList.First().ToString() : result.First().HostName.TrimEnd('.');
             var port = result.First().Port;
@@ -39,6 +39,7 @@ namespace Recommend.API.Services
         {
             try
             {
+                if (string.IsNullOrEmpty(userServiceUrl)) return null;
                 var response = await _httpClient.GetStringAsync(userServiceUrl + "api/user/baseinfo/"+userId);
                 if (!string.IsNullOrEmpty(response))
                 {

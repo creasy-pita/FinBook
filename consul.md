@@ -1,7 +1,7 @@
 consul 安装
 consul 资料
 	开始入门： https://www.consul.io/intro/index.html
-	
+	ui 界面： 
 问题
 	- consul agent -dev 命令提示: ==> Starting Consul agent...
 	==> Error starting agent: Failed to start Consul server: 
@@ -17,4 +17,4 @@ consul 资料
 		使用  netstat 命令  netstat -an [-p TCP]
 	3 Windows 10 security feature
 	4 Another process is listening on the desired port
-
+		这种情况尝试重启系统看能否解决问题

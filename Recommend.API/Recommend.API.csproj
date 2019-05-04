@@ -14,14 +14,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Consul" Version="0.7.2.6" />
     <PackageReference Include="DnsClient" Version="1.1.1" />
     <PackageReference Include="DotNetCore.CAP.MySql" Version="2.2.4" />
     <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
-    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.16" />
     <!-- <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.1" /> -->
    
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>

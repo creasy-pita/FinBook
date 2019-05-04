@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project.Domain.AggregatesModel;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace Project.Infrastructure.EntityConfigurations
         {
             builder.ToTable("Projects")
             .HasKey(t => t.Id);
+            builder.Property(up => up.ShowSecurityInfo)
+                .HasConversion(new BoolToZeroOneConverter<Int16>());
         }
     }
 }

@@ -1,3 +1,57 @@
+2019年5月4日
+	轨迹 
+		rabitmq 本地安装
+		安装 见 rabbitmq安装.md		
+		问题 
+		_httpContextAccessor.HttpContext 为 null 时没有处理
+		entity framework  对 bool类型的转化问题处理
+		rabitmq  ACCESS_REFUSED 问题  解决方式 rabitmq 本地安装，之前使用了网友制作的rabbitmq docker镜像
+		
+2019年5月1日
+	轨迹
+		调试推荐服务
+			开启 consul服务发现，网关api,projectapi,userapi,recommendapi rabitmq
+			consul 开启
+			rabitmq 开启
+			检查各api 的 consul,rabitmq,sql的链接项是否正确
+	问题
+	Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware[1]
+		  An unhandled exception has occurred while executing the request.
+	System.InvalidOperationException: The binary operator Equal is not defined for the types 'System.Boolean' and 'System.Int16'.
+
+	原因：
+		在 entity framework  对 bool类型的转化问题
+		entity对象 project 中  有   public bool ShowSecurityInfo { get; set; } 定义
+		此bool ShowSecurityInfo 字段在迁移生成数据库表字段时  时 bit(1)类型
+		但在运行时  ShowSecurityInfo 会转为 ”TINYINT  The Connector/NET convention for ‘bool?’ fields is “BOOL NULLABLE” aka ”TINYINT(1) NULLABLE”  
+		所以 需要 在 运行时进行转化，具体实在 dbcontext的OnModelCreating方法中加入 builder.Property(up => up.ShowSecurityInfo).HasConversion(new BoolToZeroOneConverter<Int16>());
+		参考资料：https://bugs.mysql.com/bug.php?id=92987 https://bugs.mysql.com/bug.php?id=93028
+
+	问题
+		RabbitMQ.Client.Exceptions.AuthenticationFailureException: ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile
+	 具体信息
+	 DotNetCore.CAP.Processor.InfiniteRetryProcessor[1]
+      Processor 'DotNetCore.CAP.Processor.NeedRetryMessageProcessor' failed. Retrying...
+RabbitMQ.Client.Exceptions.BrokerUnreachableException: None of the specified endpoints were reachable ---> RabbitMQ.Client.Exceptions.AuthenticationFailureException: ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile.
+   at RabbitMQ.Client.Framing.Impl.Connection.StartAndTune()
+   at RabbitMQ.Client.Framing.Impl.Connection.Open(Boolean insist)
+   at RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.Init(IFrameHandler fh)
+   at RabbitMQ.Client.ConnectionFactory.CreateConnection(IEndpointResolver endpointResolver, String clientProvidedName)
+   --- End of inner exception stack trace ---
+   at RabbitMQ.Client.ConnectionFactory.CreateConnection(IEndpointResolver endpointResolver, String clientProvidedName)
+   at DotNetCore.CAP.RabbitMQ.ConnectionChannelPool.GetConnection()
+   at DotNetCore.CAP.RabbitMQ.ConnectionChannelPool.Rent()
+   at DotNetCore.CAP.RabbitMQ.RabbitMQPublishMessageSender.PublishAsync(String keyName, String content)
+   at DotNetCore.CAP.Processor.NeedRetryMessageProcessor.ProcessPublishedAsync(IStorageConnection connection, ProcessingContext context)
+   at DotNetCore.CAP.Processor.NeedRetryMessageProcessor.ProcessAsync(ProcessingContext context)
+   at DotNetCore.CAP.Processor.InfiniteRetryProcessor.ProcessAsync(ProcessingContext context)
+
+   可能原因
+	RabbitMQ.Client 与 server  版本不一致
+	或者 账号原因，   dockers中账号不是admin 和 guest 
+	解决
+		window 10 安装 rabbitmq 试试能不能行
+	https://community.esri.com/thread/164173
 2019年4月27日
 	轨迹
 		1 推荐服务的编写 主要步骤如下

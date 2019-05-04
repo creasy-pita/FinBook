@@ -17,6 +17,8 @@ using Recommend.API.Data;
 using Recommend.Infrastructure;
 using Recommend.API.Services;
 using Recommend.API.IntegrationEventHandler;
+using Recommend.API.Dto;
+using Consul;
 
 namespace Recommend.API
 {
@@ -41,12 +43,26 @@ namespace Recommend.API
 
                 );
             }
-);
+);          services.AddOptions();
+            services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
             services.AddScoped<ProjectCreatedIntegrationEventHandler>();
             services.AddScoped<IUserService, UserServcie>();
             services.AddScoped<IContactService, ContactService>();
 
+
             #region consul 服务发现  和 polly 重试，熔断...
+            //config the discoveryservice (consulservice ) host address
+            services.AddSingleton<IConsulClient>(p => new ConsulClient(cfg =>
+            {
+                var serviceConfiguration = p.GetRequiredService<IOptions<ServiceDisvoveryOptions>>().Value;
+
+                if (!string.IsNullOrEmpty(serviceConfiguration.Consul.HttpEndpoint))
+                {
+                    // if not configured, the client will use the default value "127.0.0.1:8500"
+                    cfg.Address = new Uri(serviceConfiguration.Consul.HttpEndpoint);
+                }
+            }));
+
             services.AddSingleton<IDnsQuery>(p =>
             {
                 return new LookupClient(IPAddress.Parse("127.0.0.1"), 8600);
@@ -86,7 +102,7 @@ namespace Recommend.API
             services.AddCap(options =>
             {
                 options.UseEntityFramework<RecommendDbContext>()
-                    .UseRabbitMQ("hostname")//TBD
+                    .UseRabbitMQ("localhost")//TBD
                     .UseDashboard();
                 options.UseDiscovery(d =>
                 {

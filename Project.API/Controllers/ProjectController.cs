@@ -20,12 +20,15 @@ namespace Project.API.Controllers
         private IMediator _mediatR;
         private IRecommendService _recommendService;
         private IProjectQueries _projectQueries;
-
-        public ProjectController(IMediator mediator, IRecommendService recommendService, IProjectQueries projectQueries)
+        private IProjectRepository _projectRepository;
+        public ProjectController(IMediator mediator, IRecommendService recommendService
+            , IProjectQueries projectQueries
+            ,IProjectRepository projectRepository)
         {
             _mediatR = mediator;
             _recommendService = recommendService;
             _projectQueries = projectQueries;
+            _projectRepository = projectRepository;
         }
 
         [HttpPost]
@@ -33,9 +36,17 @@ namespace Project.API.Controllers
         public async Task<IActionResult> CreateProject()
         {
             Domain.AggregatesModel.Project project = new Domain.AggregatesModel.Project();
-            project.Introduction = "公司介绍";
-            project.Company = "creasypita";
             project.UserId = UserIdentity.UserId;
+            //project.Introduction = "公司介绍";
+            //project.Company = "creasypita";
+            //project.UserId = UserIdentity.UserId;
+            //project.ShowSecurityInfo = bool.Parse("false");
+            //project.ReferenceId = 0;
+            //project.UpdateTime = DateTime.Now;
+            //project.CreateTime = DateTime.Now;
+            //project.RegisterTime = DateTime.Now;
+
+
             CreateProjectCommand command = new CreateProjectCommand { Project = project };
             var result = _mediatR.Send(command, new CancellationToken());
             await result;
@@ -54,8 +65,7 @@ namespace Project.API.Controllers
             }
             project.UserId = UserIdentity.UserId;
             CreateProjectCommand command = new CreateProjectCommand { Project = project};
-            var result =_mediatR.Send(command, new CancellationToken());
-            await result;
+            var result = await _mediatR.Send(command, new CancellationToken());
             return Ok(result);
         }
 

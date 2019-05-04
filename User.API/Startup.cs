@@ -71,6 +71,7 @@ namespace User.API
             {
                 options
                     .UseEntityFramework<AppUserDbContext>()
+                    //.UseRabbitMQ("localhost");//TBD
                     .UseRabbitMQ("localhost");//TBD
                 options.UseDashboard();
                 options.UseDiscovery(d =>
