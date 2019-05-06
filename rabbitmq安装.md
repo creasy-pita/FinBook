@@ -7,7 +7,11 @@ https://blog.csdn.net/qq_26718271/article/details/76577356#
 2 版本选择
 https://www.rabbitmq.com/which-erlang.html
 
+git上各个版本信息 包括源码及 各系统编译后的软件包 ： https://github.com/rabbitmq/rabbitmq-server/releases
+
 3 rabbitmq 3.7.14  erlang 21.03
+
+
 
 4 问题
 The filename, directory name, or volume label syntax is incorrect.
