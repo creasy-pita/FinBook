@@ -1,3 +1,9 @@
+2019年5月8日
+	轨迹
+		1 推荐服务的 中 用户A创建新项目的后没有产生对用户A好友的推荐的功能消缺
+		mongodb 安装
+		对集成事件处理类的修改
+
 2019年5月4日
 	轨迹 
 		rabitmq 本地安装
@@ -174,21 +180,28 @@ test conflict1
 2018-8-1
 test conflict2
 	mongodb 
-	下载  window .msi  
-		下载地址
-	安装
-	环境变量设置
-		Path append   <install directory>\bin;
-	使用 mongo  cmd 命令创建 dbdata |log  directory
-		md "F:\dbdata\mongodb\data\db" "F:\dbdata\mongodb\log"
-	exe 方式打开 mongodb
-		"d:\Program Files\MongoDB\Server\4.0\bin\mongod.exe" --dbpath="F:\dbdata\mongodb\data\db"
-	window services 
-		Start MongoDB Community Edition as a Windows Service
-		Stop MongoDB Community Edition as a Windows Service
-		Remove MongoDB Community Edition as a Windows Service
-		方式启动，停止 和 从windows services 删除  m
-
+	server 安装
+		docker 安装方式
+			docker run -d -p 27017-27019:27017-27019 --name mongodb mongo
+				注意端口的映射依赖于docker network,docker network 会去使用已有的网络适配器
+		window 安装方式
+			下载  window .msi  
+			下载地址
+			安装
+			环境变量设置
+			Path append   <install directory>\bin;
+			使用 mongo  cmd 命令创建 dbdata |log  directory
+			md "F:\dbdata\mongodb\data\db" "F:\dbdata\mongodb\log"
+			exe 方式打开 mongodb
+			"d:\Program Files\MongoDB\Server\4.0\bin\mongod.exe" --dbpath="F:\dbdata\mongodb\data\db"
+			window services 
+			Start MongoDB Community Edition as a Windows Service
+			Stop MongoDB Community Edition as a Windows Service
+			Remove MongoDB Community Edition as a Windows Service
+			方式启动，停止 和 从windows services 删除  m
+	客户端 安装 
+		安装 window 版 robo3t.exe 
+			
 2018-7-30
 问题：
 	配置正确，但CAP ，rabbitmq 就是不work问题问题 

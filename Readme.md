@@ -32,17 +32,14 @@ chapter 5 通讯录服务
 chapter 6 项目|推荐 服务
 106-132
 
-	127-132 推荐服务实现
+	125-132 推荐服务实现
 		实现步骤
 		1 接收IntegrationEvent ,实现 Project create event hanlder
 		2 创建recommand ef,通过ef context插入数据库
 		3 写 recommend api controller ,get recommends by identity,即完成通过用户id 获取 项目推荐列表
 
-	130-132 未完成   dapper queries 未完成
-	 129 ProjectCreatedIntegrationEventHandler 中没有加订阅 ICapSubscribe
-	 
-	126
-		
+	130-132 完成  
+	121-123 dapper queries 需要再复习
 
 
 chapter 7 微服务监控与部署	
