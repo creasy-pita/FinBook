@@ -24,7 +24,7 @@ namespace Contact.API.Infrastructure
 
 
         public ResilientHttpClient CreateResilientHttpClient()
-            => new ResilientHttpClient((origin) => CreatePolicies(), _logger, _httpContextAccessor);
+            => new ResilientHttpClient("contact_api",(origin) => CreatePolicies(), _logger, _httpContextAccessor);
 
         private Policy[] CreatePolicies()
             => new Policy[]

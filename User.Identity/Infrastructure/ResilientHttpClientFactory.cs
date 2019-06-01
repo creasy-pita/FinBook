@@ -24,7 +24,7 @@ namespace User.Identity.Infrastructure
 
 
         public ResilientHttpClient CreateResilientHttpClient()
-            => new ResilientHttpClient((origin) => CreatePolicies(), _logger, _httpContextAccessor);
+            => new ResilientHttpClient("identity_api", (origin) => CreatePolicies(), _logger, _httpContextAccessor);
 
         private Policy[] CreatePolicies()
             => new Policy[]

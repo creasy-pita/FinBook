@@ -1,3 +1,25 @@
+2019年6月1日
+	轨迹
+		zipkin 
+			安装 注册和使用
+				zipkin 服务端安装
+					 内存存储的方式:docker run -d -p 9411:9411 openzipkin/zipkin
+			相关资料
+				https://zipkin.apache.org/pages/tracers_instrumentation.html
+				https://github.com/openzipkin/docker-zipkin
+				https://github.com/openzipkin/zipkin4net
+			遗留问题
+				一个获取token的请求 不能跨  identity_api, user_api
+				建议的解决方式:
+					这里使用的 ResilientHttpClient 方式, 可以使用  System.Net.Http.HttpClient 的方式写个demo项目来测试先
+		elasticsearch
+			安装 
+				docker 方式:
+					docker run -e ES_JAVA_OPTS="-Xms256m -Xmx256m" -d -p 9200:9200 -p 9300:9300 --name es-master elasticsearch:7.1.0
+					问题: 启动后就会 退出 需要使用以下的方式  single-node
+					docker run -e "discovery.type=single-node" -d -p 9200:9200 -p 9300:9300 --name es-master elasticsearch:7.1.0
+				https://juejin.im/post/5ca0d12c518825550b35be6d
+			参考资料 https://www.elastic.co/guide/cn/elasticsearch/guide/current/foreword_id.html
 2019年5月8日
 	轨迹
 		1 推荐服务的 中 用户A创建新项目的后没有产生对用户A好友的推荐的功能消缺
@@ -11,7 +33,7 @@
 		问题 
 		_httpContextAccessor.HttpContext 为 null 时没有处理
 		entity framework  对 bool类型的转化问题处理
-		rabitmq  ACCESS_REFUSED 问题  解决方式 rabitmq 本地安装，之前使用了网友制作的rabbitmq docker镜像
+		rabitmq  ACCESS_REFUSED 问题  解决方式 rabitmq 本地安装，之前使用了网友制作的rabbitmq docker镜像(镜像里会使用自己的用户权限账号，不通用导致访问rabbitmq时提示access_refused)
 		
 2019年5月1日
 	轨迹

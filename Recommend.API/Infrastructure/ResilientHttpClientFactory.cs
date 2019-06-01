@@ -26,7 +26,7 @@ namespace Recommend.Infrastructure
         public ResilientHttpClient CreateResilientHttpClient()
             //TBD 后期看能不能写成 带 "RecommendAPI"
             // => new ResilientHttpClient("RecommendAPI",(origin) => CreatePolicies(), _logger, _httpContextAccessor);
-            => new ResilientHttpClient((origin) => CreatePolicies(), _logger, _httpContextAccessor);
+            => new ResilientHttpClient("recommend_api",(origin) => CreatePolicies(), _logger, _httpContextAccessor);
 
         private Policy[] CreatePolicies()
             => new Policy[]

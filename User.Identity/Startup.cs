@@ -16,6 +16,11 @@ using User.Identity.Authentication;
 using User.Identity.Infrastructure;
 using User.Identity.Services;
 using User.Identity.Test;
+using zipkin4net;
+using zipkin4net.Middleware;
+using zipkin4net.Tracers.Zipkin;
+using zipkin4net.Transport.Http;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace User.Identity
 {
@@ -41,7 +46,7 @@ namespace User.Identity
                     .AddInMemoryIdentityResources(Config.GetIdentityResources());
 
 
-            services.AddSingleton<HttpClient>(new HttpClient());
+            //services.AddSingleton<HttpClient>(new HttpClient());
 
             services.AddOptions();
             services.Configure<ServiceDisvoveryOptions>(Configuration.GetSection("ServiceDiscovery"));
@@ -90,7 +95,10 @@ namespace User.Identity
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app
+            , IHostingEnvironment env
+            ,ILoggerFactory loggerFactory
+            , IApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
             {
@@ -99,10 +107,32 @@ namespace User.Identity
             loggerFactory.AddLog4Net();
             app.UseIdentityServer();
             app.UseMvc();
+
+            RegisterZipkinTrace(app, loggerFactory, lifetime);
             //app.Run(async (context) =>
             //{
             //    await context.Response.WriteAsync("Hello World!");
             //});
+        }
+
+        public void RegisterZipkinTrace(IApplicationBuilder app
+            , ILoggerFactory loggerFactory
+            , IApplicationLifetime lifetime)
+        {
+            lifetime.ApplicationStarted.Register(() => {
+                TraceManager.SamplingRate = 1.0f;
+                var logger = new TracingLogger(loggerFactory,"zipkin4net");
+                var httpSender = new HttpZipkinSender("http://192.168.11.83:9411","application/json");
+                var tracer = new ZipkinTracer(httpSender, new JSONSpanSerializer(), new Statistics());
+                var consoleTracer = new zipkin4net.Tracers.ConsoleTracer();
+                TraceManager.RegisterTracer(tracer);
+                TraceManager.RegisterTracer(consoleTracer);
+                TraceManager.Start(logger);
+
+            });
+
+            lifetime.ApplicationStarted.Register(() => TraceManager.Stop());
+            app.UseTracing("identity_api");
         }
     }
 }

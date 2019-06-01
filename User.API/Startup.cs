@@ -19,6 +19,10 @@ using Microsoft.Extensions.Options;
 using User.API.Data;
 using User.API.Data.POCO;
 using User.API.Filters;
+using zipkin4net;
+using zipkin4net.Middleware;
+using zipkin4net.Tracers.Zipkin;
+using zipkin4net.Transport.Http;
 
 namespace User.API
 {
@@ -90,7 +94,7 @@ namespace User.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
             IApplicationBuilder app,
-            IApplicationLifetime appLife,
+            IApplicationLifetime lifetime,
             ILoggerFactory loggerFactory,
             IOptions<ServiceDisvoveryOptions> serviceDisvoveryOptions,
             IConsulClient consul)
@@ -148,7 +152,7 @@ namespace User.API
 
                 consul.Agent.ServiceRegister(registration).GetAwaiter().GetResult();
 
-                appLife.ApplicationStopping.Register(() =>
+                lifetime.ApplicationStopping.Register(() =>
                 {
                     consul.Agent.ServiceDeregister(serviceId).GetAwaiter().GetResult();
                 });
@@ -156,6 +160,28 @@ namespace User.API
             app.UseCap();
             app.UseAuthentication();
             app.UseMvc();
+
+            RegisterZipkinTrace(app, loggerFactory, lifetime);
+        }
+
+        public void RegisterZipkinTrace(IApplicationBuilder app
+            , ILoggerFactory loggerFactory
+            , IApplicationLifetime lifetime)
+        {
+            lifetime.ApplicationStarted.Register(() => {
+                TraceManager.SamplingRate = 1.0f;
+                var logger = new TracingLogger(loggerFactory, "zipkin4net");
+                var httpSender = new HttpZipkinSender("http://192.168.11.83:9411", "application/json");
+                var tracer = new ZipkinTracer(httpSender, new JSONSpanSerializer(), new Statistics());
+                var consoleTracer = new zipkin4net.Tracers.ConsoleTracer();
+                TraceManager.RegisterTracer(tracer);
+                TraceManager.RegisterTracer(consoleTracer);
+                TraceManager.Start(logger);
+
+            });
+
+            lifetime.ApplicationStarted.Register(() => TraceManager.Stop());
+            app.UseTracing("user_api");
         }
 
     }
