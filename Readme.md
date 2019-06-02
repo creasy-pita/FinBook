@@ -45,7 +45,7 @@ chapter 6 项目|推荐 服务
 chapter 7 微服务监控与部署	
 133-
 		大致过了一遍
-		完成zipkin的安装, 但存在问题  具体见 readme.txt 2019年6月1日
+		完成zipkin的安装, 但存在问题 完成elasticsearch安装 简单交互  具体见 readme.txt 2019年6月1日
 
 
 需要记录的文档类型

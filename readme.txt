@@ -1,3 +1,88 @@
+2019年6月2日
+	轨迹
+		kibana
+			docker pull docker.elastic.co/kibana/kibana:7.1.0
+			docker run -d --name kibana --net search -p 5601:5601 docker.elastic.co/kibana/kibana:7.1.0
+
+	日志的生命周期
+		生产日志  采集 过滤 格式化   存储  展示
+
+	kibana 安装
+
+	
+
+		主要点：
+			如果以dockers 容器方式运行， 需要 kibana 连接 elasticsearch 
+			kibana 有一个环境变量 elasticsearch_url 默认为  http://elasticsearch:9200
+			kibana 和 elasticsearch 运行在统一  docker network， 然后elasticsearch 运行的容器名称使用elasticsearch，
+			这样kibana 就可以通过 http://elasticsearch:9200 访问 elasticsearch
+		涉及命令
+			docker network create search
+			docker network connect search containername|containerid
+			docker run -d --name kibana --net search -p 5601:5601 docker.elastic.co/kibana/kibana:7.1.0
+			docker network inspect search
+		netcore 日志通过 kibana 展示
+	fluentd
+		安装
+		
+			td-agent : 用于收集日志的客户端， 容器运行时 --log-driver=fluentd --log-opt fluentd-address=192.168.5.217:24224 来指向 
+				通过 window msi 方式直接安装到 host,通过本机ip 访问
+				也可以通过 docker安装
+			fluentd 设置主要时  source 和 match
+				source 是  fluentd 的 地址和端口
+				match 指定 elasticsearch 的地址端口
+
+			如果需要docker 容器 的日志 输出到远程的 fuentd td-agent 中 ， 可以在dockers run 的 log-driver 设置为fluentd 及后续加入他的地址
+				参考 ：https://www.fluentd.org/guides/recipes/docker-logging
+				docker run --log-driver=fluentd --log-opt fluentd-address=192.168.5.217:24224 ubuntu echo 'Hello Fluentd...'
+		
+			netcore 程序的默认日志 输出到fluentd  格式会乱， 需要引入serilog ,对json 格式和 对象参数的序列化支持很好
+
+
+
+			参考资料：
+				安装指南： https://docs.fluentd.org/installation/install-by-msi
+				docker logging to fluentd : https://www.fluentd.org/guides/recipes/docker-logging
+	serilog 日志的使用
+		简单使用
+			配置
+				见 SerilogAspnetCoreSample 项目的appsetting.json
+			需要引入nuget包
+				serilog-aspnetcore 
+				serilog-sinks-elasticsearch
+				serilog-sinks-console
+				serilog-settings-configuration
+			startup中的组件注册
+
+
+		结合 fluentd 
+			编写简单的 dockerfile文件
+				FROM scratch
+				WORKDIR /app
+				#COPY . ./
+				ENTRYPOINT ["./SerilogAspnetCoreSample"]			
+			自部署方式发布
+				dotnet publish -c release -runtime centos.7-x64
+			拷贝到 centos7 中 自部署运行 检查是否有问题
+				增加 程序发布目录下所有文件运行权限 chmod +x publish/*
+			打包成镜像
+				dotnet build tag helloapi .
+			运行容器
+				docker run -p 5000:5000 --log-driver=fluentd --log-opt fluentd-address=192.168.5.217:24224 helloapi helloapi:latest
+				结果： 报错
+		遗留问题
+			 执行：docker run -p 5000:5000 --log-driver=fluentd --log-opt fluentd-address=192.168.5.217:24224 helloapi helloapi:latest
+			报错：docker: Error response from daemon: OCI runtime create failed: container_linux.go:348: starting container process caused "exec: \"./SerilogAspnetCoreSample\": stat ./SerilogAspnetCoreSample: no such file or directory": unknown.
+		可能原因：
+			1scratch 镜像 不能执行 SerilogAspnetCoreSample 文件，里边没有 linux 系统文件 改用centos7 镜像
+			2 
+			3 可能有参考价值的资料
+				https://github.com/dotnet/dotnet-docker-samples/blob/master/dotnetapp-selfcontained/Dockerfile
+
+		进项运行
+		未完成 
+			编写一个net core aspnetcore 程序， tag 成镜像， 并一容器方式运行 其日志指向 fluentd 本例中时指向 192.168.5.217:24224
+
 2019年6月1日
 	轨迹
 		zipkin 
@@ -17,9 +102,16 @@
 				docker 方式:
 					docker run -e ES_JAVA_OPTS="-Xms256m -Xmx256m" -d -p 9200:9200 -p 9300:9300 --name es-master elasticsearch:7.1.0
 					问题: 启动后就会 退出 需要使用以下的方式  single-node
-					docker run -e "discovery.type=single-node" -d -p 9200:9200 -p 9300:9300 --name es-master elasticsearch:7.1.0
+					docker run -e "discovery.type=single-node" -d -p 9200:9200 -p 9300:9300 --name elasticsearch elasticsearch:7.1.0
 				https://juejin.im/post/5ca0d12c518825550b35be6d
 			参考资料 https://www.elastic.co/guide/cn/elasticsearch/guide/current/foreword_id.html
+
+
+			elasticsearch
+				存储结构
+				index
+				type
+				document
 2019年5月8日
 	轨迹
 		1 推荐服务的 中 用户A创建新项目的后没有产生对用户A好友的推荐的功能消缺
