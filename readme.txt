@@ -78,6 +78,30 @@
 			2 
 			3 可能有参考价值的资料
 				https://github.com/dotnet/dotnet-docker-samples/blob/master/dotnetapp-selfcontained/Dockerfile
+			
+			找到原因
+				Dockerfile 中 不小心注释 了 #COPY . ./
+				正确写法
+					FROM scratch
+					WORKDIR /app
+					COPY . ./
+					ENTRYPOINT ["./SerilogAspnetCoreSample"]
+			修改后dockers run 发生 Couldn't find a valid ICU package installed on the system. Set the configuration flag System.Globalization.Invariant to true if you want to run with no globalization support.
+				修改方法： runtimeconfig.json  增加  "System.Globalization.Invariant": true
+						修改后
+							{
+							  "runtimeOptions": {
+								"configProperties": {
+								  "System.GC.Server": true,
+								  "System.Globalization.Invariant": true
+								}
+							  }
+							}
+
+					参见https://github.com/dotnet/core/issues/2186
+
+
+
 
 		进项运行
 		未完成 
