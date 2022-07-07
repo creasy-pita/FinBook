@@ -16,7 +16,7 @@
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.6.0" />
     <PackageReference Include="MediatR" Version="5.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.15" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.0" />
 	<PackageReference Include="MySql.Data" Version="8.0.15" />
 	<PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.15" />
